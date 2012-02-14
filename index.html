@@ -1,0 +1,36 @@
+<html>
+	<head>
+		<title>network defcon</title>
+	</head>
+	<body>
+		<h1> hello world</h1>
+		<div id="news"><div>connecting ...</div></div>
+		<div id="messages"></div>
+	</body>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+	var socket = io.connect('http://localhost');
+
+	// show news
+	socket.on('news', function (data) {
+		document.getElementById('news').innerHTML = data;
+	});
+	
+	// show updates
+	socket.on('update', function (data) {
+		var messages = document.getElementById("messages");
+		// create element
+		var message = document.createElement("div");
+
+		//  add data into element
+		message.innerHTML = data;
+		// append element to messages
+		messages.appendChild(message);
+
+		// remove old element if they are more than 8 messages
+		if (messages.childNodes.length > 8) {
+			messages.removeChild(messages.firstChild);
+		}
+	});
+	</script>
+</html>

@@ -19,6 +19,12 @@ curl http://npmjs.org/install.sh || sh
 
 
 ## Usage
+node server.js
+
+open your favorite browser to http://localhost:8000/
+
+currently application just ping www.google.com
+
 ### Basic 
 ```javascript
 TODO
