@@ -4,6 +4,7 @@
 	</head>
 	<body>
 		<h1> hello world</h1>
+		<div id="commands"></div>
 		<div id="news"><div>connecting ...</div></div>
 		<div id="messages"></div>
 	</body>
@@ -11,19 +12,45 @@
 	<script>
 	var socket = io.connect('http://localhost');
 
+	function sendAction (action) {
+		console.log('send action to server : ' + action);
+		socket.emit('action', action);
+	}
+
 	// show news
 	socket.on('news', function (data) {
 		document.getElementById('news').innerHTML = data;
 	});
+
+
+	// add event on button.
+	var action = ['START', 'PAUSE', 'RESUME', 'STOP']
+		, i
+		, button
+		, name
+		, buttons = document.getElementById('commands');
+
+	for (i = 0; i < action.length; i++) {
+		name = action[i];
+		button = document.createElement('input');
+		button.setAttribute('type', 'button');
+		button.setAttribute('name', name);
+		button.setAttribute('value', name);
+		button.addEventListener('click', function () {
+			sendAction(this.getAttribute('name'));
+		});
+		buttons.appendChild(button);
+	}
 	
 	// show updates
 	socket.on('update', function (data) {
 		var messages = document.getElementById("messages");
 		// create element
 		var message = document.createElement("div");
+		console.log(data);
 
 		//  add data into element
-		message.innerHTML = data;
+		message.innerHTML =  data;
 		// append element to messages
 		messages.appendChild(message);
 
