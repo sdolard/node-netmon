@@ -8,9 +8,13 @@
     "url": "git://github.com/sdolard/node-netmon.git"
   },
   "engines": {
-    "node": "~0.6.8"
+    "node": ">= 0.6.0"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "socket.io": "0.9.x",
+    "cron": "0.1.x",
+    "vows": "0.6.x",
+    "jsrevival": "0.0.x" 
+  },
   "optionalDependencies": {}
 }

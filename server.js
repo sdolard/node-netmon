@@ -1,9 +1,12 @@
-var app = require('http').createServer(handler).listen(8000)
-	, io = require('socket.io').listen(app)
+var
+port = 8000,
+app = require('http').createServer(handler).listen(port),
+	io = require('socket.io').listen(app)
 	, fs = require('fs')
 	, spawn = require('child_process').spawn
 	, NM = require('./lib/netmon').NetworkMonitor;
 
+	console.log('Listening on localhost:%d', port)
 monitor = new NM();
 
 

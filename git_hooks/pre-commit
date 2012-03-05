@@ -1,0 +1,4 @@
+#!/bin/sh
+jsrevival -o "properties: false" -R lib/ test/ server.js
+exit $? 
+
