@@ -1,4 +1,5 @@
 #!/bin/sh
-jsrevival -o "properties: false" -R lib/ test/ server.js
-exit $? 
+jsrevival -o "properties: false"  -R bin/ lib/ test/ server.js
+[ $? -ne 0 ] && echo "jslint failed" && exit $? 
+vows test/* --spec
 

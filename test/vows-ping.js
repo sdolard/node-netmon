@@ -18,7 +18,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 				});
 				return promise;
 			},
-			'We succeed': function (r) {
+			'It succeed': function (r) {
 				assert.equal(r.host, 'localhost');
 				assert.equal(r.exitCode, 0);
 			}
@@ -32,7 +32,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 				});
 				return promise;
 			},
-			'We failed': function (r) {
+			'It failed': function (r) {
 				assert.equal(r.host, 'nohost');
 				assert.notEqual(r.exitCode, 0);
 			}
@@ -46,7 +46,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 				});
 				return promise;
 			},
-			'We succeed': function (r) {
+			'It succeed': function (r) {
 				assert.equal(r.host, '::1');
 				assert.equal(r.exitCode, 0);
 				
