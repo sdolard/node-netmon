@@ -1,4 +1,5 @@
-# node-netmon
+# node-netmon [![Build Status](https://secure.travis-ci.org/sdolard/node-netmon.png?branch=master)](http://travis-ci.org/sdolard/node-netmon)
+
 Net service monitoring
 
 
