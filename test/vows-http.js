@@ -27,7 +27,8 @@ exports.suite1 = vows.describe('http').addBatch({
 				assert.equal(r.host, 'www.google.com');		
 			},
 			'Default port is 80': function (err, r) {
-				assert.equal(r.port, 80);		
+				assert.equal(r.port, 80);	
+				assert.isFalse(r.ssl);
 			},
 			'Default path is /': function (err, r) {
 				assert.equal(r.path, '/');		
@@ -109,6 +110,30 @@ exports.suite1 = vows.describe('http').addBatch({
 				assert.equal(err.code, 'ETIMEOUT');
 				assert.equal(r.port, 666);
 				assert.equal(r.timeout, 500);
+			}
+		},
+		'When checking mail.google.com with ssl': {
+			topic: function() {
+				var promise = new events.EventEmitter();
+				
+				http.check({
+						host: 'mail.google.com', 
+						ssl: true
+				}, function (err, r) {
+					if (err) { 
+						promise.emit('error', err, r); 
+					} else {
+						promise.emit('success', r); 
+					}
+				});
+				return promise;
+			},
+			'It succeed': function (err,r) {
+				assert.isNotNull(r);
+			},
+			'Default ssl port is 443': function (err,r) {
+				assert.equal(r.port, 443);
+				assert.isTrue(r.ssl);
 			}
 		}	
 });
