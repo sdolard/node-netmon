@@ -50,7 +50,7 @@
 		console.log(data);
 
 		//  add data into element
-		message.innerHTML =  data;
+		message.innerHTML =  data.type + ' ' + data.host + ' => ' + (data.success ? 'OK' : 'KO code=' + data.exitCode);
 		// append element to messages
 		messages.appendChild(message);
 

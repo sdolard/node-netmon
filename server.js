@@ -4,8 +4,8 @@ app = require('http').createServer(handler).listen(port),
 io = require('socket.io').listen(app),
 fs = require('fs'),
 spawn = require('child_process').spawn,
-NM = require('./lib/netmon').NetworkMonitor,
-monitor = new NM();
+netmon = require('./lib/netmon'),
+monitor = new netmon.NetworkMonitor();
 
 console.log('Listening on http://localhost:%d/', port);
 
@@ -16,45 +16,21 @@ io.sockets.on('connection', function (socket) {
 	socket.on('action', function (action) {
 		var state = monitor.state;
 		action = action.toUpperCase();
-		console.log('action : ' + action);
-		console.log('monitor state : ' + state);
-		if (action === 'START') {
 
-			if (state === 'START') {
-				socket.emit('update', "monitor already started!");
-				return;
-			}
+		//console.log('action : ' + action);
+		//console.log('monitor state : ' + state);
 
-			if (state === 'PAUSE') {
-				socket.emit('update', "monitor are pause. juste resume it");
-				monitor.resume();
-
-			} else {
-				monitor.start();
-			}
-		}
-		if (action === 'PAUSE') {
-			if (state === 'PAUSE') {
-				socket.emit('update', "monitor already paused!");
+		if (action === netmon.START) {
+			if (state === netmon.START) {
+				socket.emit('news', "monitor already started!");
 				return;
 			}
-			if (state === 'STOP') {
-				socket.emit('update', "monitor can't pause. monitor are stoped!");
-				return;
-			}
-			monitor.pause();
-		}
-		if (action === 'RESUME') {
-			if (state !== 'PAUSE') {
-				socket.emit('update', "monitor can only be resume if it's in pause. currently monitor are " + state);
-				return;
-			}
-			monitor.resume();
+			monitor.start();
 		}
 
-		if (action === 'STOP') {
-			if (state === 'STOP') {
-				socket.emit('update', "monitor already stoped!");
+		if (action === netmon.STOP) {
+			if (state === netmon.STOP) {
+				socket.emit('news', "monitor already stoped!");
 				return;
 			}
 			monitor.stop(function () {
@@ -65,7 +41,6 @@ io.sockets.on('connection', function (socket) {
 
 	socket.emit('news', "welcome. monitor is currently " + monitor.state);
 	function output (data) {
-		console.log('monitor : %s', data);
 		socket.emit('update', data);
 	}
 
@@ -75,12 +50,6 @@ io.sockets.on('connection', function (socket) {
 
 	monitor.on('state', stateupdate);
 	
-	if (monitor.state === 'STOP') {
-		monitor.start();
-	} else if (monitor.state === 'PAUSE') {
-		monitor.resume();
-	}
-
 	monitor.on("data", output);
 
 	socket.on("disconnect", function (socket) {
@@ -95,7 +64,6 @@ monitor.on('exit', function () {
 	console.log('monitor exit');
 	io.sockets.emit('news', "monitor terminated");
 });
-
 
 
 function handler (req, res) {
@@ -114,3 +82,5 @@ function handler (req, res) {
 app.on('close', function () {
 	monitor.stdin.end();
 });
+
+monitor.start();
