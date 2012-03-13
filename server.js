@@ -5,10 +5,18 @@ io = require('socket.io').listen(app),
 fs = require('fs'),
 spawn = require('child_process').spawn,
 netmon = require('./lib/netmon'),
-monitor = new netmon.NetworkMonitor();
+monitor = new netmon.NetworkMonitor({
+	monitors: {
+		'www.google.com': {
+			type: ['ping', 'http']
+		},
+		'www.bing.com': {
+			type: ['ping']
+		}
+	}
+});
 
 console.log('Listening on http://localhost:%d/', port);
-
 
 io.sockets.on('connection', function (socket) {
 
