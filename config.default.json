@@ -1,0 +1,6 @@
+{
+	"monitors": {
+		"www.google.com": { "type": ["ping", "http"] },
+		"www.bing.com": { "type": ["ping", "http"] }
+	}
+}

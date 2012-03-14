@@ -18,6 +18,7 @@ curl http://npmjs.org/install.sh || sh
 [sudo] npm install [-g] netmon
 ```
 
+copie config.default.json to config.json and edit it to set domain to monitor
 
 ## Usage
 node server.js

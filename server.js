@@ -3,16 +3,22 @@ port = 8000,
 app = require('http').createServer(handler).listen(port),
 io = require('socket.io').listen(app),
 fs = require('fs'),
+util = require('util'),
+config = require('./lib/config'),
 spawn = require('child_process').spawn,
 netmon = require('./lib/netmon'),
-monitor = new netmon.NetworkMonitor({
-	monitors: {
-		'www.google.com': {
-			type: ['ping', 'http']
-		},
-		'www.bing.com': {
-			type: ['ping']
-		}
+monitor = new netmon.NetworkMonitor();
+
+config.load(__dirname + '/config.json', function (err, cfg) {
+	if (err) {
+		console.log('error when loading config file!');
+		console.log(err.stack);
+		return;
+	}
+
+	if (cfg.monitors) {
+		monitor.setMonitors(cfg.monitors);
+		monitor.start();
 	}
 });
 
