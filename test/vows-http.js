@@ -7,7 +7,7 @@ nhttp = require('http');
 
 http = require('../lib/http');
 
-exports.suite1 = vows.describe('http').addBatch({
+exports.suite1 = vows.describe('http/s').addBatch({
 		'When checking www.google.com': {
 			topic: function() {
 				var promise = new events.EventEmitter();
@@ -84,7 +84,7 @@ exports.suite1 = vows.describe('http').addBatch({
 				});
 				return promise;
 			},
-			'Path do not exists': function (err,r) {
+			'Path do not exists': function (err, r) {
 				assert.equal(err.code, 'EUNEXPECTEDSTATUSCODE');
 				assert.equal(r.path, '/thispathdonotexists');
 			}

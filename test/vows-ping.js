@@ -13,8 +13,14 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.check('localhost', function (r) {
-						promise.emit('success', r);
+				ping.check({
+						host: 'localhost'
+				}, function (err, r) {
+					if (err) { 
+						promise.emit('error', err, r); 
+					} else { 
+						promise.emit('success', r); 
+					}
 				});
 				return promise;
 			},
@@ -27,13 +33,20 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.check('nohost', function (r) {
-						promise.emit('success', r);
+				ping.check({
+						host: 'nohost'
+				}, function (err, r) {
+					if (err) { 
+						promise.emit('error', err, r); 
+					} else { 
+						promise.emit('success', r); 
+					}
 				});
 				return promise;
 			},
-			'It failed': function (r) {
-				assert.equal(r.host, 'nohost');
+			'It failed': function (err, r) {
+				//console.log(util.inspect(r));
+				assert.equal(err.code, 'EPINGFAILED');
 				assert.notEqual(r.exitCode, 0);
 			}
 		},
@@ -41,8 +54,15 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.check('::1', true, function (r) {
-						promise.emit('success', r);
+				ping.check({
+						host: '::1',
+						ipV6: true
+				}, function (err, r) {
+					if (err) { 
+						promise.emit('error', err, r); 
+					} else { 
+						promise.emit('success', r); 
+					}
 				});
 				return promise;
 			},
@@ -52,23 +72,30 @@ exports.suite1 = vows.describe('ping').addBatch({
 				
 			}
 		},
-		'When we ping 1.1.1.1 with timeout set to 2s': {
+		'When we ping 1.1.1.1 with timeout set to 1s': {
 			topic: function() {
 				var  
 				promise = new events.EventEmitter();
 				start = new Date();
 				
-				ping.check('1.1.1.1', 2, function (r) {
-						end = new Date();
-						promise.emit('success', r);
-						
+				ping.check({
+						host: '1.1.1.1',
+						timeout: 1
+				}, function (err, r) {
+					end = new Date();
+					if (err) { 
+						promise.emit('error', err, r); 
+					} else { 
+						promise.emit('success', r); 
+					}
+					
 				});
 				return promise;
 			},
-			'It takes 2s to return': function (r) {
+			'It takes 1s to return': function (r) {
 				assert.equal(r.host, '1.1.1.1');
 				assert.notEqual(r.exitCode, 0);
-				assert.equal(end.getTime() - start.getTime() >= 2000, true);
+				assert.equal(end.getTime() - start.getTime() >= 1000, true);
 			}
 		}
 });
