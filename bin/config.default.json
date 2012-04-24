@@ -1,0 +1,42 @@
+{
+	"monitor": [
+		{ 
+			"target": "www.google.com",
+			"action": "ping",
+			"config ": {
+				"ipV6": false,
+				"timeout": 2
+			},
+			"on": [
+				{
+					"result": "success",
+					"monitor": [{ 
+							"target": "www.google.com",
+							"action": "http", 
+							"config": {
+								"port": 443,
+								"ssl": true,
+								"path": "/"
+							}
+					}]
+				},{
+					"result": "failure", 
+					"monitor": [ 
+						{
+							"target": "8.8.8.8",
+							"ping": true 
+						}
+					]
+				}
+			]
+		},
+		{
+			"target": "www.bing.com", 
+			"action": "ping"
+		},{
+			"target": "www.bing.com", 
+			"action": "http"
+		}
+	]
+}
+

@@ -1,21 +1,22 @@
 {
-  "author": "",
-  "name": "netmon",
-  "description": "Network service monitoring",
-  "version": "0.0.1",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/sdolard/node-netmon.git"
-  },
-  "scripts": {
-    "test": "vows test/vows* --spec"
-  },
-  "engines": {
-    "node": ">= 0.6.0"
-  },
-  "dependencies": {
-    "vows": "0.6.x",
-    "jsrevival": "0.0.x" 
-  },
-  "optionalDependencies": {}
+	"author": "",
+	"name": "netmon",
+	"description": "Network service monitoring",
+	"version": "0.0.1",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/sdolard/node-netmon.git"
+	},
+	"scripts": {
+		"test": "vows test/vows* --spec"
+	},
+	"engines": {
+		"node": ">= 0.6.0"
+	},
+	"dependencies": {
+		"vows": "0.6.x",
+		"cron": "0.2.x",
+		"posix-getopt": "0.0.x"
+	},
+	"optionalDependencies": {}
 }

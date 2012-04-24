@@ -3,8 +3,7 @@ vows = require('vows'),
 assert = require('assert'),
 util = require('util'),
 events = require("events"),
-nhttp = require('http');
-
+nhttp = require('http'),
 http = require('../lib/http');
 
 exports.suite1 = vows.describe('http/s').addBatch({

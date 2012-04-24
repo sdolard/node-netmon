@@ -3,7 +3,6 @@ vows = require('vows'),
 assert = require('assert'),
 util = require('util'),
 events = require("events"),
-
 ping = require('../lib/ping'),
 start,
 end;
