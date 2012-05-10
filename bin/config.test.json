@@ -12,31 +12,15 @@
             "on": {
                 "success": {
                     "run": [
-                    	{
-                            "host": "www.google.com",
-                            "action": "http"
-                        },
                         {
                             "host": "www.google.com",
                             "action": "http",
                             "config": {
-                                "ssl": true
-                            }
-                        },{
-                            "host": "www.bing.com",
-                            "action": "ping",
-                            "on": {
-                            	"success": {
-                            		"run": [
-                            			{
-                            				"host": "www.bing.com",
-                            				"action": "http"
-                            			}
-                            		]
-                            	}
+                                "port": 443,
+                                "ssl": true,
+                                "path": "/"
                             }
                         }
-                        
                     ]
                 },
                 "failure": {
@@ -48,6 +32,18 @@
                     ]
                 }
             }
+        },
+        {
+        	"host": "www.bing.com",
+        	"action": "ping"
+        },
+        {
+        	"host": "www.bing.com",
+        	"action": "http"
+        },
+        {
+        	"host": "jj",
+        	"action": "ping"
         }
     ]
 }
