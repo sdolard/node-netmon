@@ -1,49 +1,16 @@
 {
     "monitor": [
     	{
-            "host": "www.google.com",
+            "host": "10.2.15.251",
             "cron": "* * * * * *",
-            "description": "Google ping",
+            "description": "Fw IHM",
             "action": "ping",
-            "config": {
-                "ipV6": false,
-                "timeout": 2
-            },
             "on": {
-                "success": {
-                    "run": [
-                    	{
-                            "host": "www.google.com",
-                            "action": "http"
-                        },
-                        {
-                            "host": "www.google.com",
-                            "action": "http",
-                            "config": {
-                                "ssl": true
-                            }
-                        },{
-                            "host": "www.bing.com",
-                            "action": "ping",
-                            "on": {
-                            	"success": {
-                            		"run": [
-                            			{
-                            				"host": "www.bing.com",
-                            				"action": "http"
-                            			}
-                            		]
-                            	}
-                            }
-                        }
-                        
-                    ]
-                },
                 "failure": {
                     "run": [
                         {
                             "host": "8.8.8.8",
-                            "action": "ping"
+                             "action": "ping"
                         }
                     ]
                 }
