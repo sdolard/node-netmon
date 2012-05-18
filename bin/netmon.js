@@ -97,12 +97,20 @@ _log('Reading configuration from: %s', configFile);
 function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/task) {
 	var msg = util.format('%s: %s on %s %s', data.date.toString(), task.action, task.host, err === undefined ? 'succeed': 'failed');
 	if (err) {
+		if (task.action === 'http') {
+			msg = util.format('%s (%s)', msg, err.message);
+		} else 	if (task.action === 'tcp') {
+			msg = util.format('%s (%s)', msg, err.message);
+		} 
 		_log(msg.red);
+		//_log(err);
 	} else {
 		_log(msg.green);	
 	}
 	
-	//_log('%s: %s on %s %s (%s)', task.id, task.action, task.host, err === undefined ? 'succeed'.green : 'failed'.red, data.date.toString());
+	if (jobList.hasOwnProperty(task.id)) {
+		delete jobList[task.id];
+	}
 	jobList[task.id] = task;
 }
 
