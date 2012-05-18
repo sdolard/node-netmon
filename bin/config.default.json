@@ -1,19 +1,8 @@
 {
     "monitor": [
     	{
-            "host": "test",
-            "cron": "* * * * * *",
-            "action": "ping",
-            "on": {
-                "failure": {
-                    "run": [
-                        {
-                            "host": "8.8.8.8",
-                             "action": "ping"
-                        }
-                    ]
-                }
-            }
+        	"host": "www.google.com",
+        	"action": "http"
         }
     ]
 }
