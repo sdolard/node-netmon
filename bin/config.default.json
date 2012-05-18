@@ -1,9 +1,8 @@
 {
     "monitor": [
     	{
-            "host": "10.2.15.251",
+            "host": "test",
             "cron": "* * * * * *",
-            "description": "Fw IHM",
             "action": "ping",
             "on": {
                 "failure": {
