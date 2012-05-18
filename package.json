@@ -16,7 +16,8 @@
 	"dependencies": {
 		"vows": "0.6.x",
 		"cron": "0.2.x",
-		"posix-getopt": "0.0.x"
+		"posix-getopt": "0.0.x",
+		"colors": "0.6.x"
 	},
 	"optionalDependencies": {}
 }

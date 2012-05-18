@@ -5,7 +5,8 @@ util = require('util'),
 fs = require('fs'),
 
 // contrib
-getopt = require('posix-getopt'), // contrib
+getopt = require('posix-getopt'), 
+colors = require('colors'), 
 
 // lib
 configLoader = require('../lib/config'),
@@ -79,7 +80,6 @@ while ((opt = optParser.getopt()) !== undefined && !opt.error) {
 }
 
 function writeToFile() {
-	debugger;
 	if (output_json_file_name === undefined) {
 		return;
 	}
@@ -95,13 +95,20 @@ _log('Reading configuration from: %s', configFile);
 
 
 function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/task) {
-	_log('%s: %s on %s %s (%s)', task.id, task.action, task.host, err === undefined ? 'succeed' : 'failed', data.date.toString());
+	var msg = util.format('%s: %s on %s %s', data.date.toString(), task.action, task.host, err === undefined ? 'succeed': 'failed');
+	if (err) {
+		_log(msg.red);
+	} else {
+		_log(msg.green);	
+	}
+	
+	//_log('%s: %s on %s %s (%s)', task.id, task.action, task.host, err === undefined ? 'succeed'.green : 'failed'.red, data.date.toString());
 	jobList[task.id] = task;
 }
 
 
 function onJobDone(task) {
-	_log('JOB DONE: id: %s', task.id);
+	//_log('JOB DONE: id %s', task.id);
 	writeToFile();
 }
 
@@ -123,7 +130,7 @@ configLoader.load(configFile, function(err, config){
 			netJob = netjob.create(config.monitor[i]);
 			netJob.on('result', onTaskResult);
 			netJob.on('done', onJobDone);
-			jobList[netJob.id] = netJob._toMixedTask();
+			jobList[netJob.id] = netJob.cleanedUpTask();
 		}
 		
 		// Init
