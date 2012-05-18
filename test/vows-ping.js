@@ -26,6 +26,12 @@ exports.suite1 = vows.describe('ping').addBatch({
 			'It succeed': function (r) {
 				assert.equal(r.host, 'localhost');
 				assert.equal(r.exitCode, 0);
+			},'Date is set': function (r) {
+				assert.isNotNull(r.date);
+			},'ttl is a number': function (r) {
+				assert.isNumber(r.ttl);
+			},'mstime is a number': function (r) {
+				assert.isNumber(r.mstime);
 			}
 		},
 		'When we ping nohost': {
@@ -47,6 +53,13 @@ exports.suite1 = vows.describe('ping').addBatch({
 				//console.log(util.inspect(r));
 				assert.equal(err.code, 'EPINGFAILED');
 				assert.notEqual(r.exitCode, 0);
+				
+			},'Date is set': function (err, r) {
+				assert.isNotNull(r.date);
+			},'ttl is undefined': function (err, r) {
+				assert.isUndefined(r.ttl);
+			},'mstime is undefined': function (err, r) {
+				assert.isUndefined(r.mstime);
 			}
 		},
 		'When we ping ::1': {
@@ -68,7 +81,12 @@ exports.suite1 = vows.describe('ping').addBatch({
 			'It succeed': function (r) {
 				assert.equal(r.host, '::1');
 				assert.equal(r.exitCode, 0);
-				
+			},'Date is set': function (r) {
+				assert.isNotNull(r.date);
+			},'ttl is a number': function (r) {
+				assert.isNumber(r.ttl);
+			},'mstime is a number': function (r) {
+				assert.isNumber(r.mstime);
 			}
 		},
 		'When we ping 1.1.1.1 with timeout set to 1s': {

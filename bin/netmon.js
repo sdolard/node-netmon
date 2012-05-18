@@ -2,6 +2,7 @@
 var 
 //node
 util = require('util'),
+fs = require('fs'),
 
 // contrib
 getopt = require('posix-getopt'), // contrib
@@ -13,18 +14,21 @@ netjob = require('../lib/netjob'),
 // global var
 configFile = __dirname + "/config.default.json",
 quiet = false,
-optParser, opt;
+optParser, opt,
+jobList = {},
+output_json_file_name;
 
 
 /**
 * Display help
 */
 function displayHelp() {
-    console.log('netmon [-c config_file] [–q] [–h]');
+    console.log('netmon [-c config_file] [-o output_json_file] [–q] [–h]');
     console.log('netmon: A network job engine.');
     console.log('Options:');
     console.log('  c: jslint file (overload default)');
     console.log('  q: quiet. Do not display anything to console');	
+    console.log('  o: output json file');	
     console.log('  h: display this help');
 }
 
@@ -46,18 +50,23 @@ function _error() {
 
 
 // Command line options
-optParser = new getopt.BasicParser(':hqc:', process.argv);
+optParser = new getopt.BasicParser(':hqc:o:', process.argv);
 while ((opt = optParser.getopt()) !== undefined && !opt.error) {
     switch(opt.option) {
     case 'c': 
     	configFile = opt.optarg;
     	break;
     	
+    case 'o': 
+    	output_json_file_name = opt.optarg;
+    	_log('Result will be written in: %s', output_json_file_name);
+    	break;
+    	
     case 'h': // help
     	displayHelp();
     	process.exit();
     	break;
-
+    	
     case 'q': // quiet
     	quiet = true;
     	break;
@@ -69,22 +78,33 @@ while ((opt = optParser.getopt()) !== undefined && !opt.error) {
     }
 }
 
-// Current configu file
-_log('Reading configuration from: %s:', configFile);
+function writeToFile() {
+	debugger;
+	if (output_json_file_name === undefined) {
+		return;
+	}
+	fs.writeFile(output_json_file_name, util.format('%j', jobList), function (err) {
+			if (err) {
+				_error(err);
+			}
+	});
+}
+
+// Current config file
+_log('Reading configuration from: %s', configFile);
 
 
 function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/task) {
-	if (err) {
-		_log('%s: %s on %s failed', task.id, task.action, task.host);
-	} else {
-		_log('%s: %s on %s succeed', task.id, task.action, task.host);
-	}
+	_log('%s: %s on %s %s (%s)', task.id, task.action, task.host, err === undefined ? 'succeed' : 'failed', data.date.toString());
+	jobList[task.id] = task;
 }
 
 
 function onJobDone(task) {
 	_log('JOB DONE: id: %s', task.id);
+	writeToFile();
 }
+
 
 configLoader.load(configFile, function(err, config){
 		var i = 0,
@@ -103,7 +123,11 @@ configLoader.load(configFile, function(err, config){
 			netJob = netjob.create(config.monitor[i]);
 			netJob.on('result', onTaskResult);
 			netJob.on('done', onJobDone);
+			jobList[netJob.id] = netJob._toMixedTask();
 		}
+		
+		// Init
+		writeToFile();
 });
 
 

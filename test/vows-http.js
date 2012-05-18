@@ -43,6 +43,9 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			},
 			'It succeed': function (err, r) {
 				assert.isNotNull(r);
+			},
+			'date is set': function (err, r) {
+				assert.isNotNull(r.date);
 			}
 		},
 		'When checking an invalid hostname': {
@@ -65,6 +68,9 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			},
 			'It failed': function (err, r) {
 				assert.equal(err.code, 'ENOTFOUND');
+			},
+			'date is set': function (err, r) {
+				assert.isNotNull(r.date);
 			}
 		},
 		'When checking google/thispathdonotexists path': {
@@ -86,6 +92,9 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			'Path do not exists': function (err, r) {
 				assert.equal(err.code, 'EUNEXPECTEDSTATUSCODE');
 				assert.equal(r.path, '/thispathdonotexists');
+			},
+			'date is set': function (err, r) {
+				assert.isNotNull(r.date);
 			}
 		},
 		'When checking google on evil port with a 500ms timeout': {
@@ -109,6 +118,9 @@ exports.suite1 = vows.describe('http/s').addBatch({
 				assert.equal(err.code, 'ETIMEOUT');
 				assert.equal(r.port, 666);
 				assert.equal(r.timeout, 500);
+			},
+			'date is set': function (err, r) {
+				assert.isNotNull(r.date);
 			}
 		},
 		'When checking mail.google.com with ssl': {
@@ -133,6 +145,9 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			'Default ssl port is 443': function (err,r) {
 				assert.equal(r.port, 443);
 				assert.isTrue(r.ssl);
+			},
+			'date is set': function (err, r) {
+				assert.isNotNull(r.date);
 			}
 		}	
 });
