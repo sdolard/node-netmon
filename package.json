@@ -20,6 +20,5 @@
 		"colors": "0.6.x",
 		"socket.io": "0.9.x"
 	},
-	},
 	"optionalDependencies": {}
 }
