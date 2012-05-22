@@ -109,10 +109,22 @@ exports.suite1 = vows.describe('ping').addBatch({
 				});
 				return promise;
 			},
-			'It takes 1s to return': function (r) {
+			'It takes 1s to return': function (err, r) {
 				assert.equal(r.host, '1.1.1.1');
-				assert.notEqual(r.exitCode, 0);
+				assert.equal(r.exitCode, 2);
 				assert.equal(end.getTime() - start.getTime() >= 1000, true);
+			},
+			'It failed': function (err, r) {
+				//console.log(util.inspect(r));
+				assert.equal(err.code, 'ENORESPONSE');
+				assert.notEqual(r.exitCode, 0);
+				
+			},'Date is set': function (err, r) {
+				assert.isNotNull(r.date);
+			},'ttl is undefined': function (err, r) {
+				assert.isUndefined(r.ttl);
+			},'mstime is undefined': function (err, r) {
+				assert.isUndefined(r.mstime);
 			}
 		}
 });

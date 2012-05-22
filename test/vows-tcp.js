@@ -45,7 +45,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 				
 				tcp.check({
 						port: 80,
-						host: '---'
+						host: '---&'
 				}, function (err, r) {
 					if (err) { 
 						promise.emit('error', err, r); 
@@ -56,7 +56,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 				return promise;
 			},
 			'response is valid': function (err, r) {
-				assert.equal(r.host, '---');
+				assert.equal(r.host, '---&');
 			},
 			'It failed': function (err, r) {
 				assert.equal(err.code, 'ENOTFOUND');

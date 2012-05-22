@@ -29,9 +29,10 @@ function displayHelp() {
     console.log('Options:');
     console.log('  c: jslint file (overload default)');
     console.log('  q: quiet. Do not display anything to console');	
-    console.log('  o: output json file');	
+    console.log('  o: output json file');
     console.log('  h: display this help');
 }
+
 
 // Log
 function _log() {
@@ -60,7 +61,6 @@ while ((opt = optParser.getopt()) !== undefined && !opt.error) {
     	
     case 'o': 
     	output_json_file_name = opt.optarg;
-    	_log('Result will be written in: %s', output_json_file_name);
     	break;
     	
     case 'h': // help
@@ -92,38 +92,61 @@ function writeToFile() {
 
 // Current config file
 _log('Reading configuration from: %s', configFile);
+// output file
+if (output_json_file_name) {
+	_log('Result will be written in: %s', output_json_file_name);
+}
 
+function toDataItem(config) {
+	config = config || {};
+	var data;
+	if(config.job) {
+		data = config.job.getConfig();
+	} else {
+		data = config.task.getConfig();
+	}
+	data.err = config.err;
+	data.data = config.data;
+	
+	return data;
+}
 
-function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/task) {
-	var msg = util.format('%s: %s on %s %s', data.date.toString(), task.action, task.host, err === undefined ? 'succeed': 'failed');
+function onResult(/*Error*/err, /*Object*/data, /*NetTask*/ task, /*NetJob*/job) {
+	var msg = util.format('%s: %s on %s %s', data.date.toString(), task.action, task.host, 
+		err === undefined ? 'succeed': 'failed');
+	
 	if (err) {
-		if (task.action === 'http') {
-			msg = util.format('%s (%s)', msg, err.message);
-		} else 	if (task.action === 'tcp') {
-			msg = util.format('%s (%s)', msg, err.message);
-		} 
+		msg = util.format('%s (%s: %s)', msg, err.code, err.message);
 		_log(msg.red);
 		//_log(err);
 	} else {
 		_log(msg.green);	
 	}
 	
+	// job.id === job._task.id
 	if (jobList.hasOwnProperty(task.id)) {
 		delete jobList[task.id];
 	}
-	jobList[task.id] = task;
+	
+	jobList[task.id] = toDataItem({
+			job: job,
+			task: task,
+			err: err,
+			data: data
+	});
 }
 
 
-function onJobDone(task) {
-	//_log('JOB DONE: id %s', task.id);
+function onJobDone(/*NetJob*/ job) {
+	//_log('JOB DONE: id %s', job.id);
+	//process.exit(0);
 	writeToFile();
 }
 
 
 configLoader.load(configFile, function(err, config){
 		var i = 0,
-		netJob;
+		job;
 		
 		if (err) {
 			_error(err);
@@ -135,17 +158,24 @@ configLoader.load(configFile, function(err, config){
 		}
 		
 		for (i = 0; i < config.monitor.length; i++){
-			netJob = netjob.create(config.monitor[i]);
-			netJob.on('result', onTaskResult);
-			netJob.on('done', onJobDone);
-			jobList[netJob.id] = netJob.cleanedUpTask();
+			job = netjob.create(config.monitor[i]);
+			job.on('result', onResult);
+			job.on('done', onJobDone);
+			jobList[job.id] = toDataItem({
+					job: job
+			});
 		}
 		
 		// Init
 		writeToFile();
 });
 
-
+/*process.on('uncaughtException', function (err) {
+		console.log('Caught exception: ' + err);
+		console.trace();
+		process.exit(1);
+});
+*/
 
 
 

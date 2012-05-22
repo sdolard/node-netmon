@@ -18,7 +18,8 @@
 		"cron": "0.2.x",
 		"posix-getopt": "0.0.x",
 		"colors": "0.6.x",
-		"socket.io": "0.9.x"
+		"socket.io": "0.9.x",
+		"netasqcomm": "0.1.x"
 	},
 	"optionalDependencies": {}
 }
