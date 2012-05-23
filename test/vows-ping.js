@@ -2,6 +2,7 @@ var
 vows = require('vows'),
 assert = require('assert'),
 util = require('util'),
+os = require('os'),
 events = require("events"),
 ping = require('../lib/ping'),
 start,
@@ -111,7 +112,20 @@ exports.suite1 = vows.describe('ping').addBatch({
 			},
 			'It takes 1s to return': function (err, r) {
 				assert.equal(r.host, '1.1.1.1');
-				assert.equal(r.exitCode, 2);
+				
+				switch(os.platform()){
+				case 'linux': 	
+					assert.equal(r.exitCode, 1);
+					break;
+					
+				case 'darwin':
+					assert.equal(r.exitCode, 2);
+					break;
+					
+				default:
+					assert.equal(r.exitCode, 1);
+				}		
+				
 				assert.equal(end.getTime() - start.getTime() >= 1000, true);
 			},
 			'It failed': function (err, r) {
