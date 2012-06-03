@@ -1,0 +1,42 @@
+{
+    "crontab": [
+        {
+            "cronTime": "* * * * *",
+            "description": "Each second: run on task and one depending on success and another one when it's finished, no matter the result",
+            "enabled": true,
+            "task": [
+                {
+                    "host": "www.google.com",
+                    "enabled": true,
+                    "description": "Google.com ping",
+                    "action": "ping", 
+                    "verbose": true,
+                    "on": {
+                    	"success": {
+                    		"run": [
+                    			{
+                    				"host": "www.google.fr",
+                    				"enabled": true,
+                    				"description": "Google.fr ping",
+                    				"action": "ping", 
+                    				"verbose": true
+                    			}
+                    		]
+                    	},
+                    	"complete": {
+                    		"run": [
+                    			{
+                    				"host": "www.bing.com",
+                    				"enabled": true,
+                    				"description": "bing.com ping",
+                    				"action": "ping", 
+                    				"verbose": true
+                    			}
+                    		]
+                    	}
+                    }
+                }
+            ]
+        }
+    ]
+}

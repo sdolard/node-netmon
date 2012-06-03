@@ -1,8 +1,15 @@
 {
-    "monitor": [
-    	{
-        	"host": "www.google.com",
-        	"action": "http"
+    "crontab": [
+        {
+            "cronTime": "* * * * *",
+            "description": "Ping google each second",
+            "enabled": true,
+            "task": [
+                {
+                    "host": "www.google.com",
+                    "description": "Google.com ping"
+                }
+            ]
         }
     ]
 }

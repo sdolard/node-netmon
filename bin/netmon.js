@@ -16,7 +16,7 @@ netjob = require('../lib/netjob'),
 configFile = __dirname + "/config.default.json",
 quiet = false,
 optParser, opt,
-jobList = {},
+jobs = {},
 output_json_file_name;
 
 
@@ -83,7 +83,7 @@ function writeToFile() {
 	if (output_json_file_name === undefined) {
 		return;
 	}
-	fs.writeFile(output_json_file_name, util.format('%j', jobList), function (err) {
+	fs.writeFile(output_json_file_name, util.format('%j', jobs), function (err) {
 			if (err) {
 				_error(err);
 			}
@@ -111,25 +111,23 @@ function toDataItem(config) {
 	return data;
 }
 
-function onResult(/*Error*/err, /*Object*/data, /*NetTask*/ task, /*NetJob*/job) {
-	var msg = util.format('%s: %s on %s %s', data.date.toString(), task.action, task.host, 
+function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/ task, /*NetJob*/job) {
+	var msg = util.format('%s (%s): %s on %s %s', data.date.toString(), task.id, task.action, task.host, 
 		err === undefined ? 'succeed': 'failed');
 	
 	if (err) {
 		msg = util.format('%s (%s: %s)', msg, err.code, err.message);
 		_log(msg.red);
-		//_log(err);
 	} else {
 		_log(msg.green);	
 	}
 	
-	// job.id === job._task.id
-	if (jobList.hasOwnProperty(task.id)) {
-		delete jobList[task.id];
+	// Creating task property if not exists
+	if (!jobs[job.id].hasOwnProperty('task')) {
+		jobs[job.id].task = {};
 	}
 	
-	jobList[task.id] = toDataItem({
-			job: job,
+	jobs[job.id].task[task.id] = toDataItem({
 			task: task,
 			err: err,
 			data: data
@@ -138,44 +136,59 @@ function onResult(/*Error*/err, /*Object*/data, /*NetTask*/ task, /*NetJob*/job)
 
 
 function onJobDone(/*NetJob*/ job) {
-	//_log('JOB DONE: id %s', job.id);
-	//process.exit(0);
-	writeToFile();
+	_log('JOB DONE: id %s', job.id);
 }
 
 
 configLoader.load(configFile, function(err, config){
 		var i = 0,
-		job;
+		jobConfig, job, jobCount = 0;
 		
 		if (err) {
 			_error(err);
 			return;
 		}
 		
-		if (!config.monitor) {
-			_error('Invalid config file: no monitor property');
+		if (!config.crontab) {
+			_error('Invalid config file: no crontab property');
 		}
 		
-		for (i = 0; i < config.monitor.length; i++){
-			job = netjob.create(config.monitor[i]);
-			job.on('result', onResult);
+		for (i = 0; i < config.crontab.length; i++){
+			jobConfig = netjob.sanitizeConfig(config.crontab[i]);
+			jobConfig.id = 'job' + parseInt(jobCount++,10);
+			if (!jobConfig.enabled) { // must be done after setting ID, jobCount is always inc even if state is off
+				continue;
+			}
+			if (jobConfig.task.length === 0) {
+				_error('An enabled job has no task'.red);
+				continue;
+			}
+
+			job = netjob.create(jobConfig);
+			job.on('result', onTaskResult);
 			job.on('done', onJobDone);
-			jobList[job.id] = toDataItem({
+			jobs[job.id] = toDataItem({
 					job: job
 			});
+			
 		}
 		
 		// Init
 		writeToFile();
 });
 
+
+// Write result to file each second
+if (output_json_file_name) {
+	setInterval(function() {
+			writeToFile();	
+	}, 1000);
+}
+
 /*process.on('uncaughtException', function (err) {
 		console.log('Caught exception: ' + err);
-		console.trace();
 		process.exit(1);
-});
-*/
+});*/
 
 
 

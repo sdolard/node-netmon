@@ -1,0 +1,83 @@
+{
+    "crontab": [
+    	{
+            "cronTime": "* * * * *",
+            "description": "Each second: run sequentially 2 tasks collections",
+            "enabled": true,
+            "task": [
+            	{
+            		"set": [
+            			{
+            				"host": "www.google.fr",
+            				"enabled": true,
+            				"description": "Google.fr ping",
+            				"action": "ping"
+            			},
+            			{
+            				"host": "www.google.de",
+            				"enabled": true,
+            				"description": "Google.de ping",
+            				"action": "ping"
+            			}
+            		],
+            		"on": {
+            			"success": {
+            				"run": [{
+            						"host": "www.bing.com",
+            						"enabled": true,
+            						"description": "Bing.com ping",
+            						"action": "ping"
+            				}]
+            			},
+            			"failure": {
+            				"run": []
+            			},
+            			"complete": {
+            				"run": [
+            					{
+            						"host": "www.bing.fr",
+            						"enabled": true,
+            						"description": "Bing.fr ping",
+            						"action": "ping"
+            					},{
+            						"host": "www.bing.de",
+            						"enabled": true,
+            						"description": "Bing.de ping",
+            						"action": "ping"
+            					}
+            				]
+            			}
+            		} 
+            	},
+            	{
+            		"set": [
+            			{
+            				"host": "www.yahoo.fr",
+            				"enabled": true,
+            				"description": "Yahoo.fr ping",
+            				"action": "ping"
+            			}
+            		],
+            		"on": {
+            			"success": {
+            				"run": []
+            			},
+            			"failure": {
+            				"run": []
+            			},
+            			"complete": {
+            				"run": [
+            					{
+            						"host": "www.yahoo.com",
+            						"enabled": true,
+            						"description": "Yahoo.comm ping",
+            						"action": "ping"
+            					}
+            				]
+            			}
+            		} 
+            	}
+            ]
+        }
+    ]
+}
