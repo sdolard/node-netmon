@@ -6,31 +6,37 @@
             "enabled": true,
             "task": [
                 {
-                    "host": "www.google.com",
                     "enabled": true,
                     "description": "Google.com ping",
                     "action": "ping", 
-                    "verbose": true,
+                    "config": {
+                    	"host": "www.google.com"
+                    },
+                    "verbose": false,
                     "on": {
                     	"success": {
                     		"run": [
                     			{
-                    				"host": "www.google.fr",
                     				"enabled": true,
                     				"description": "Google.fr ping",
                     				"action": "ping", 
-                    				"verbose": true
+                    				"verbose": false,
+                    				"config": {
+                    					"host": "www.google.fr"
+                    				}
                     			}
                     		]
                     	},
                     	"complete": {
                     		"run": [
                     			{
-                    				"host": "www.bing.com",
                     				"enabled": true,
                     				"description": "bing.com ping",
                     				"action": "ping", 
-                    				"verbose": true
+                    				"verbose": false,
+                    				"config": {
+                    					"host": "www.bing.com"
+                    				}
                     			}
                     		]
                     	}

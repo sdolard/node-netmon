@@ -6,10 +6,12 @@
             "enabled": true,
             "task": [
                 {
-                    "host": "www.google.com",
                     "enabled": true,
                     "description": "Google.comm ping",
                     "action": "ping", 
+                    "config": {
+                    	"host": "www.google.com"
+                    },
                     "verbose": false
                 }
             ]

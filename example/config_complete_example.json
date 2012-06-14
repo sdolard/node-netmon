@@ -6,16 +6,20 @@
             "enabled": true,
             "task": [
                 {
-                    "host": "www.google.fr",
                     "enabled": true,
                     "description": "Google.fr ping",
-                    "action": "ping"
+                    "action": "ping",	
+                    "config": {
+                    	"host": "www.google.fr"
+                    }
                 },
                 {
-                    "host": "www.google.de",
                     "enabled": true,
                     "description": "Google.de ping",
-                    "action": "ping"
+                    "action": "ping",	
+                    "config": {
+                    	"host": "www.google.de"
+                    }
                 }
             ]
         },
@@ -25,10 +29,12 @@
             "enabled": true,
             "task": [
             	{
-            		"host": "www.google.com",
             		"enabled": true,
             		"description": "Google.com ping",
             		"action": "ping",
+                    "config": {
+                    	"host": "www.google.fr"
+                    },
             		"on": {
             			"success": {
             				"run": []
@@ -39,10 +45,12 @@
             			"complete": {
             				"run": [
             					{
-            						"host": "www.bing.com",
             						"enabled": true,
             						"description": "Bing.com ping",
-            						"action": "ping"
+            						"action": "ping",	
+            						"config": {
+            							"host": "www.bing.com"
+            						}
             					}
             				]
             			}
@@ -57,17 +65,21 @@
             	{
             		"set": [
             			{
-            				"host": "www.google.fr",
             				"enabled": true,
             				"description": "Google.fr ping",
             				"action": "ping",
-            				"enabled": false
+            				"enabled": false,	
+            				"config": {
+            					"host": "www.google.fr"
+            				}
             			},
             			{
-            				"host": "www.google.de",
             				"enabled": true,
             				"description": "Google.de ping",
-            				"action": "ping"
+            				"action": "ping",	
+            				"config": {
+            					"host": "www.google.de"
+            				}
             			}
             		],
             		"on": {
@@ -80,15 +92,19 @@
             			"complete": {
             				"run": [
             					{
-            						"host": "www.bing.fr",
             						"enabled": true,
             						"description": "Bing.fr ping",
-            						"action": "ping"
+            						"action": "ping",	
+            						"config": {
+            							"host": "www.bing.fr"
+            						}
             					},{
-            						"host": "www.bing.de",
             						"enabled": true,
             						"description": "Bing.de ping",
-            						"action": "ping"
+            						"action": "ping",	
+            						"config": {
+            							"host": "www.bing.de"
+            						}
             					}
             				]
             			}

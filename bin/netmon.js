@@ -37,7 +37,7 @@ function displayHelp() {
 // Log
 function _log() {
     if (quiet) {
-    	return;
+	return;
     }
     console.log.apply(console, arguments);
 }
@@ -45,7 +45,7 @@ function _log() {
 // Error log
 function _error() {
     if (quiet) {
-    	return;
+	return;
     }
     console.error.apply(console, arguments);
 }
@@ -56,26 +56,26 @@ optParser = new getopt.BasicParser(':hqc:o:', process.argv);
 while ((opt = optParser.getopt()) !== undefined && !opt.error) {
     switch(opt.option) {
     case 'c': 
-    	configFile = opt.optarg;
-    	break;
-    	
+	configFile = opt.optarg;
+	break;
+	
     case 'o': 
-    	output_json_file_name = opt.optarg;
-    	break;
-    	
+	output_json_file_name = opt.optarg;
+	break;
+	
     case 'h': // help
-    	displayHelp();
-    	process.exit();
-    	break;
-    	
+	displayHelp();
+	process.exit();
+	break;
+	
     case 'q': // quiet
-    	quiet = true;
-    	break;
-    	
+	quiet = true;
+	break;
+	
     default:
-    	_error('Invalid or incomplete option');
-    	displayHelp();
-    	process.exit(1);	
+	_error('Invalid or incomplete option');
+	displayHelp();
+	process.exit(1);	
     }
 }
 
@@ -112,7 +112,7 @@ function toDataItem(config) {
 }
 
 function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/ task, /*NetJob*/job) {
-	var msg = util.format('%s (%s): %s on %s %s', data.date.toString(), task.id, task.action, task.host, 
+	var msg = util.format('%s (%s): %s on %s %s', data.date.toString(), task.id, task.action, task.config.host, 
 		err === undefined ? 'succeed': 'failed');
 	
 	if (err) {
@@ -178,7 +178,7 @@ configLoader.load(configFile, function(err, config){
 });
 
 
-// Write result to file each second
+// Write result to file each second 
 if (output_json_file_name) {
 	setInterval(function() {
 			writeToFile();	
