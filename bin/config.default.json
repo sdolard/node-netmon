@@ -2,12 +2,17 @@
     "crontab": [
         {
             "cronTime": "* * * * *",
-            "description": "Ping google each second",
+            "description": "Each second: just run one task in verbose mode",
             "enabled": true,
             "task": [
                 {
-                    "host": "www.google.com",
-                    "description": "Google.com ping"
+                    "enabled": true,
+                    "description": "Google.comm ping",
+                    "action": "ping", 
+                    "config": {
+                    	"host": "www.google.com"
+                    },
+                    "verbose": false
                 }
             ]
         }

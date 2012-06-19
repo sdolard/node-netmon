@@ -8,6 +8,7 @@ fs = require('fs'),
 getopt = require('posix-getopt'), 
 colors = require('colors'), 
 
+
 // lib
 configLoader = require('../lib/config'),
 netjob = require('../lib/netjob'),
@@ -17,67 +18,81 @@ configFile = __dirname + "/config.default.json",
 quiet = false,
 optParser, opt,
 jobs = {},
-output_json_file_name;
-
+output_json_file_name,
+port,
+io;
 
 /**
 * Display help
 */
 function displayHelp() {
-    console.log('netmon [-c config_file] [-o output_json_file] [–q] [–h]');
-    console.log('netmon: A network job engine.');
-    console.log('Options:');
-    console.log('  c: jslint file (overload default)');
-    console.log('  q: quiet. Do not display anything to console');	
-    console.log('  o: output json file');
-    console.log('  h: display this help');
+	console.log('netmon [-c config_file] [-o output_json_file] [-p port] [q] [h] ');
+	console.log('netmon: A network job engine.');
+	console.log('Options:');
+	console.log('  c: jslint file (overload default)');
+	console.log('  q: quiet. Do not display anything to console');	
+	console.log('  p: port. Send result to specified port. Socket io event: "mon"');
+	console.log('  o: output json file');
+	console.log('  h: display this help');
+}
+
+function initSocketIo(port) {
+	// note, io.listen(<port>) will create a http server for you
+	io = require('socket.io').listen(port);
 }
 
 
 // Log
 function _log() {
-    if (quiet) {
-	return;
-    }
-    console.log.apply(console, arguments);
+	if (quiet) {
+		return;
+	}
+	console.log.apply(console, arguments);
 }
 
 // Error log
 function _error() {
-    if (quiet) {
-	return;
-    }
-    console.error.apply(console, arguments);
+	if (quiet) {
+		return;
+	}
+	console.error.apply(console, arguments);
 }
 
 
 // Command line options
-optParser = new getopt.BasicParser(':hqc:o:', process.argv);
+optParser = new getopt.BasicParser(':hqc:o:p:', process.argv);
 while ((opt = optParser.getopt()) !== undefined && !opt.error) {
-    switch(opt.option) {
-    case 'c': 
-	configFile = opt.optarg;
-	break;
-	
-    case 'o': 
-	output_json_file_name = opt.optarg;
-	break;
-	
-    case 'h': // help
-	displayHelp();
-	process.exit();
-	break;
-	
-    case 'q': // quiet
-	quiet = true;
-	break;
-	
-    default:
-	_error('Invalid or incomplete option');
-	displayHelp();
-	process.exit(1);	
-    }
+	switch(opt.option) {
+	case 'c': 
+		configFile = opt.optarg;
+		break;
+		
+	case 'o': 
+		output_json_file_name = opt.optarg;
+		break;
+		
+	case 'h': // help
+		displayHelp();
+		process.exit();
+		break;
+		
+	case 'q': // quiet
+		quiet = true;
+		break;
+		
+	case 'p': // port
+		port = parseInt(opt.optarg, 10);
+		break;
+		
+		
+	default:
+		_error('Invalid or incomplete option');
+		displayHelp();
+		process.exit(1);	
+	}
 }
+
+
 
 function writeToFile() {
 	if (output_json_file_name === undefined) {
@@ -90,11 +105,28 @@ function writeToFile() {
 	});
 }
 
+function writeToSocket() {
+	if (port === undefined) {
+		return;
+	}
+	io.sockets.emit('mon', util.format('%j', jobs));
+}
+
+function writeResult() {
+	writeToFile();
+	writeToSocket();
+}
+
+
 // Current config file
 _log('Reading configuration from: %s', configFile);
 // output file
 if (output_json_file_name) {
 	_log('Result will be written in: %s', output_json_file_name);
+}
+// socket.io
+if (port > 0) {
+	initSocketIo(port);
 }
 
 function toDataItem(config) {
@@ -163,7 +195,7 @@ configLoader.load(configFile, function(err, config){
 				_error('An enabled job has no task'.red);
 				continue;
 			}
-
+			
 			job = netjob.create(jobConfig);
 			job.on('result', onTaskResult);
 			job.on('done', onJobDone);
@@ -174,20 +206,20 @@ configLoader.load(configFile, function(err, config){
 		}
 		
 		// Init
-		writeToFile();
+		writeResult();
 });
 
 
 // Write result to file each second 
-if (output_json_file_name) {
+if (output_json_file_name || port > 0) {
 	setInterval(function() {
-			writeToFile();	
+			writeResult();	
 	}, 1000);
 }
 
 /*process.on('uncaughtException', function (err) {
-		console.log('Caught exception: ' + err);
-		process.exit(1);
+console.log('Caught exception: ' + err);
+process.exit(1);
 });*/
 
 
