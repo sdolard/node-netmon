@@ -160,7 +160,7 @@ function onTaskResult(/*Error*/err, /*Object*/data, /*NetTask*/ task, /*NetJob*/
 	
 	if (err) {
 		msg = util.format('%s (%s: %s)', msg, err.code, err.message);
-		_log(msg.red);
+		_error(msg.red);
 	} else {
 		_log(msg.green);	
 	}
