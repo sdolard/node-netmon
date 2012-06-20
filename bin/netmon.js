@@ -20,25 +20,29 @@ optParser, opt,
 jobs = {},
 output_json_file_name,
 port,
-io;
+io,
+INTERVAL_DEFAULT_VALUE = 1000,
+push_interval = INTERVAL_DEFAULT_VALUE; // default value in ms
 
 /**
 * Display help
 */
 function displayHelp() {
-	console.log('netmon [-c config_file] [-o output_json_file] [-p port] [q] [h] ');
+	console.log('netmon [-c config_file] [-o output_json_file] [-p port] [-i interval] [-q] [-h] ');
 	console.log('netmon: A network job engine.');
 	console.log('Options:');
 	console.log('  c: jslint file (overload default)');
 	console.log('  q: quiet. Do not display anything to console');	
 	console.log('  p: port. Send result to specified port. Socket io event: "mon"');
 	console.log('  o: output json file');
+	console.log('  i: millisecond interval to write to output_json_file/to emit via socketio. Default 1000ms.');
 	console.log('  h: display this help');
 }
 
 function initSocketIo(port) {
 	// note, io.listen(<port>) will create a http server for you
 	io = require('socket.io').listen(port);
+	io.set('log level', 1);
 }
 
 
@@ -60,7 +64,7 @@ function _error() {
 
 
 // Command line options
-optParser = new getopt.BasicParser(':hqc:o:p:', process.argv);
+optParser = new getopt.BasicParser(':hqc:o:p:i:', process.argv);
 while ((opt = optParser.getopt()) !== undefined && !opt.error) {
 	switch(opt.option) {
 	case 'c': 
@@ -84,6 +88,9 @@ while ((opt = optParser.getopt()) !== undefined && !opt.error) {
 		port = parseInt(opt.optarg, 10);
 		break;
 		
+	case 'i': // interval
+		push_interval = parseInt(opt.optarg, 10);
+		break;
 		
 	default:
 		_error('Invalid or incomplete option');
@@ -91,7 +98,6 @@ while ((opt = optParser.getopt()) !== undefined && !opt.error) {
 		process.exit(1);	
 	}
 }
-
 
 
 function writeToFile() {
@@ -127,6 +133,11 @@ if (output_json_file_name) {
 // socket.io
 if (port > 0) {
 	initSocketIo(port);
+}
+// push_interval
+if (push_interval !== INTERVAL_DEFAULT_VALUE) {
+	_log('Push interval default value changed: %dms (default %dms)', 
+		push_interval, INTERVAL_DEFAULT_VALUE);
 }
 
 function toDataItem(config) {
@@ -178,6 +189,7 @@ configLoader.load(configFile, function(err, config){
 		
 		if (err) {
 			_error(err);
+			process.exit(1);
 			return;
 		}
 		
@@ -202,7 +214,6 @@ configLoader.load(configFile, function(err, config){
 			jobs[job.id] = toDataItem({
 					job: job
 			});
-			
 		}
 		
 		// Init
@@ -214,7 +225,7 @@ configLoader.load(configFile, function(err, config){
 if (output_json_file_name || port > 0) {
 	setInterval(function() {
 			writeResult();	
-	}, 1000);
+	}, push_interval);
 }
 
 /*process.on('uncaughtException', function (err) {
