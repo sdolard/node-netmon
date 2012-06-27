@@ -1,3 +1,8 @@
+/*
+Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
+*/
+
+
 var 
 vows = require('vows'),
 assert = require('assert'),

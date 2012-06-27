@@ -1,3 +1,8 @@
+/*
+Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
+*/
+
+
 var 
 vows = require('vows'),
 assert = require('assert'),
@@ -92,7 +97,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 		},
 		'When we ping 1.1.1.1 with timeout set to 1s': {
 			topic: function() {
-				var  
+				var	 
 				promise = new events.EventEmitter();
 				start = new Date();
 				
@@ -114,7 +119,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 				assert.equal(r.host, '1.1.1.1');
 				
 				switch(os.platform()){
-				case 'linux': 	
+				case 'linux':	
 					assert.equal(r.exitCode, 1);
 					break;
 					
