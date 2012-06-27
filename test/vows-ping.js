@@ -9,7 +9,7 @@ assert = require('assert'),
 util = require('util'),
 os = require('os'),
 events = require("events"),
-ping = require('../lib/ping'),
+ping = require('../lib/plugin/ping'),
 start,
 end;
 
@@ -18,7 +18,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.check({
+				ping.run({
 						host: 'localhost'
 				}, function (err, r) {
 					if (err) { 
@@ -44,7 +44,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.check({
+				ping.run({
 						host: 'nohost'
 				}, function (err, r) {
 					if (err) { 
@@ -72,7 +72,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.check({
+				ping.run({
 						host: '::1',
 						ipV6: true
 				}, function (err, r) {
@@ -101,7 +101,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 				promise = new events.EventEmitter();
 				start = new Date();
 				
-				ping.check({
+				ping.run({
 						host: '1.1.1.1',
 						timeout: 1
 				}, function (err, r) {

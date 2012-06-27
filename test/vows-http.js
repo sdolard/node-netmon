@@ -9,14 +9,14 @@ assert = require('assert'),
 util = require('util'),
 events = require("events"),
 nhttp = require('http'),
-http = require('../lib/http');
+http = require('../lib/plugin/http');
 
 exports.suite1 = vows.describe('http/s').addBatch({
 		'When checking www.google.com': {
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.check({
+				http.run({
 						host: 'www.google.com'
 				}, function (err, r) {
 					if (err) { 
@@ -37,8 +37,8 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			'Default path is /': function (err, r) {
 				assert.equal(r.path, '/');		
 			},
-			'Default timout is 2s': function (err, r) {
-				assert.equal(r.timeout, 2000);		
+			'Default timout is valid': function (err, r) {
+				assert.equal(r.timeout, 2);		
 			},
 			'There is a statusCode': function (err, r) {
 				assert.isTrue(r.statusCode > 0);		
@@ -57,7 +57,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.check({
+				http.run({
 						host: '---'
 				}, function (err, r) {
 					if (err) { 
@@ -82,7 +82,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.check({
+				http.run({
 						host: 'www.google.com', 
 						path: '/thispathdonotexists'
 				}, function (err, r) {
@@ -106,10 +106,10 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.check({
+				http.run({
 						host: 'www.google.com', 
 						port: 666,
-						timeout: 500
+						timeout: 1
 				}, function (err, r) {
 					if (err) { 
 						promise.emit('error', err, r); 
@@ -122,7 +122,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			'It failed in 500ms': function (err,r) {
 				assert.equal(err.code, 'ETIMEOUT');
 				assert.equal(r.port, 666);
-				assert.equal(r.timeout, 500);
+				assert.equal(r.timeout, 1);
 			},
 			'date is set': function (err, r) {
 				assert.isNotNull(r.date);
@@ -132,7 +132,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.check({
+				http.run({
 						host: 'mail.google.com', 
 						ssl: true
 				}, function (err, r) {

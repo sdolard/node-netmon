@@ -8,14 +8,14 @@ vows = require('vows'),
 assert = require('assert'),
 util = require('util'),
 events = require("events"),
-tcp = require('../lib/tcp');
+tcp = require('../lib/plugin/tcp');
 
 exports.suite1 = vows.describe('tcp').addBatch({
 		'When checking www.google.com': {
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				tcp.check({
+				tcp.run({
 						port: 80,
 						host: 'www.google.com'
 				}, function (err, r) {
@@ -34,8 +34,8 @@ exports.suite1 = vows.describe('tcp').addBatch({
 				assert.equal(r.port, 80);	
 			},
 			
-			'Default timout is 2s': function (err, r) {
-				assert.equal(r.timeout, 2000);		
+			'Default timout is valid': function (err, r) {
+				assert.equal(r.timeout, 2);		
 			},
 			'It succeed': function (err, r) {
 				assert.isNotNull(r);
@@ -48,7 +48,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				tcp.check({
+				tcp.run({
 						port: 80,
 						host: '---&'
 				}, function (err, r) {
@@ -74,10 +74,10 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				tcp.check({
+				tcp.run({
 						host: 'www.google.com', 
 						port: 666,
-						timeout: 500
+						timeout: 1
 				}, function (err, r) {
 					if (err) { 
 						promise.emit('error', err, r); 
@@ -90,7 +90,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			'It failed in 500ms': function (err,r) {
 				assert.equal(err.code, 'ETIMEOUT');
 				assert.equal(r.port, 666);
-				assert.equal(r.timeout, 500);
+				assert.equal(r.timeout, 1);
 			},
 			'date is set': function (err, r) {
 				assert.isNotNull(r.date);
