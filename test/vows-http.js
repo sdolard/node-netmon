@@ -18,39 +18,39 @@ exports.suite1 = vows.describe('http/s').addBatch({
 				
 				http.run({
 						host: 'www.google.com'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else { 
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'host is www.google.com': function (err, r) {
-				assert.equal(r.host, 'www.google.com');		
+			'host is www.google.com': function (err, config, response) {
+				assert.equal(config.host, 'www.google.com');		
 			},
-			'Default port is 80': function (err, r) {
-				assert.equal(r.port, 80);	
-				assert.isFalse(r.ssl);
+			'Default port is 80': function (err, config, response) {
+				assert.equal(config.port, 80);	
+				assert.isFalse(config.ssl);
 			},
-			'Default path is /': function (err, r) {
-				assert.equal(r.path, '/');		
+			'Default path is /': function (err, config, response) {
+				assert.equal(config.path, '/');		
 			},
-			'Default timout is valid': function (err, r) {
-				assert.equal(r.timeout, 2);		
+			'Default timout is valid': function (err, config, response) {
+				assert.equal(config.timeout, 2);		
 			},
-			'There is a statusCode': function (err, r) {
-				assert.isTrue(r.statusCode > 0);		
+			'There is a statusCode': function (err, config, response) {
+				assert.isTrue(response.statusCode > 0);		
 			},
-			'statusMessage corresponds to statusCode': function (err, r) {
-				assert.isTrue(r.statusMessage === nhttp.STATUS_CODES[r.statusCode.toString()]);		
+			'statusMessage corresponds to statusCode': function (err, config, response) {
+				assert.isTrue(response.statusMessage === nhttp.STATUS_CODES[response.statusCode.toString()]);		
 			},
-			'It succeed': function (err, r) {
-				assert.isNotNull(r);
+			'It succeed': function (err, config, response) {
+				assert.isNotNull(response);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
 			}
 		},
 		'When checking an invalid hostname': {
@@ -59,23 +59,23 @@ exports.suite1 = vows.describe('http/s').addBatch({
 				
 				http.run({
 						host: '---'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else {
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'response is valid': function (err, r) {
-				assert.equal(r.host, '---');
+			'response is valid': function (err, config, response) {
+				assert.equal(config.host, '---');
 			},
-			'It failed': function (err, r) {
+			'It failed': function (err, config, response) {
 				assert.equal(err.code, 'ENOTFOUND');
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'reponse is undefined': function (err, config, response) {
+				assert.isUndefined(response);
 			}
 		},
 		'When checking google/thispathdonotexists path': {
@@ -85,21 +85,21 @@ exports.suite1 = vows.describe('http/s').addBatch({
 				http.run({
 						host: 'www.google.com', 
 						path: '/thispathdonotexists'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else {
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'Path do not exists': function (err, r) {
+			'Path do not exists': function (err, config, response) {
 				assert.equal(err.code, 'EUNEXPECTEDSTATUSCODE');
-				assert.equal(r.path, '/thispathdonotexists');
+				assert.equal(config.path, '/thispathdonotexists');
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
 			}
 		},
 		'When checking google on evil port with a 500ms timeout': {
@@ -110,22 +110,22 @@ exports.suite1 = vows.describe('http/s').addBatch({
 						host: 'www.google.com', 
 						port: 666,
 						timeout: 1
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else {
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'It failed in 500ms': function (err,r) {
+			'It failed in 500ms': function (err, config, response) {
 				assert.equal(err.code, 'ETIMEOUT');
-				assert.equal(r.port, 666);
-				assert.equal(r.timeout, 1);
+				assert.equal(config.port, 666);
+				assert.equal(config.timeout, 1);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'reponse is undefined': function (err, config, response) {
+				assert.isUndefined(response);
 			}
 		},
 		'When checking mail.google.com with ssl': {
@@ -135,24 +135,24 @@ exports.suite1 = vows.describe('http/s').addBatch({
 				http.run({
 						host: 'mail.google.com', 
 						ssl: true
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else {
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'It succeed': function (err,r) {
-				assert.isNotNull(r);
+			'It succeed': function (err,config, response) {
+				assert.isNotNull(response);
 			},
-			'Default ssl port is 443': function (err,r) {
-				assert.equal(r.port, 443);
-				assert.isTrue(r.ssl);
+			'Default ssl port is 443': function (err, config, response) {
+				assert.equal(config.port, 443);
+				assert.isTrue(config.ssl);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
 			}
 		}	
 });

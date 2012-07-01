@@ -20,24 +20,24 @@ exports.suite1 = vows.describe('ping').addBatch({
 				
 				ping.run({
 						host: 'localhost'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else { 
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'It succeed': function (r) {
-				assert.equal(r.host, 'localhost');
-				assert.equal(r.exitCode, 0);
-			},'Date is set': function (r) {
-				assert.isNotNull(r.date);
-			},'ttl is a number': function (r) {
-				assert.isNumber(r.ttl);
-			},'mstime is a number': function (r) {
-				assert.isNumber(r.mstime);
+			'It succeed': function (err, config, response) {
+				assert.equal(config.host, 'localhost');
+				assert.equal(response.exitCode, 0);
+			},'Date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
+			},'ttl is a number': function (err, config, response) {
+				assert.isNumber(response.ttl);
+			},'mstime is a number': function (err, config, response) {
+				assert.isNumber(response.mstime);
 			}
 		},
 		'When we ping nohost': {
@@ -46,26 +46,26 @@ exports.suite1 = vows.describe('ping').addBatch({
 				
 				ping.run({
 						host: 'nohost'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else { 
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'It failed': function (err, r) {
-				//console.log(util.inspect(r));
+			'It failed': function (err, config, response) {
+				//console.log(util.inspect(config, response));
 				assert.equal(err.code, 'EPINGFAILED');
-				assert.notEqual(r.exitCode, 0);
+				assert.notEqual(response.exitCode, 0);
 				
-			},'Date is set': function (err, r) {
-				assert.isNotNull(r.date);
-			},'ttl is undefined': function (err, r) {
-				assert.isUndefined(r.ttl);
-			},'mstime is undefined': function (err, r) {
-				assert.isUndefined(r.mstime);
+			},'Date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
+			},'ttl is undefined': function (err, config, response) {
+				assert.isUndefined(response.ttl);
+			},'mstime is undefined': function (err, config, response) {
+				assert.isUndefined(response.mstime);
 			}
 		},
 		'When we ping ::1': {
@@ -75,24 +75,24 @@ exports.suite1 = vows.describe('ping').addBatch({
 				ping.run({
 						host: '::1',
 						ipV6: true
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else { 
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 				});
 				return promise;
 			},
-			'It succeed': function (r) {
-				assert.equal(r.host, '::1');
-				assert.equal(r.exitCode, 0);
-			},'Date is set': function (r) {
-				assert.isNotNull(r.date);
-			},'ttl is a number': function (r) {
-				assert.isNumber(r.ttl);
-			},'mstime is a number': function (r) {
-				assert.isNumber(r.mstime);
+			'It succeed': function (err, config, response) {
+				assert.equal(config.host, '::1');
+				assert.equal(response.exitCode, 0);
+			},'Date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
+			},'ttl is a number': function (err, config, response) {
+				assert.isNumber(response.ttl);
+			},'mstime is a number': function (err, config, response) {
+				assert.isNumber(response.mstime);
 			}
 		},
 		'When we ping 1.1.1.1 with timeout set to 1s': {
@@ -104,46 +104,46 @@ exports.suite1 = vows.describe('ping').addBatch({
 				ping.run({
 						host: '1.1.1.1',
 						timeout: 1
-				}, function (err, r) {
+				}, function (err, config, response) {
 					end = new Date();
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else { 
-						promise.emit('success', r); 
+						promise.emit('success', config, response); 
 					}
 					
 				});
 				return promise;
 			},
-			'It takes 1s to return': function (err, r) {
-				assert.equal(r.host, '1.1.1.1');
+			'It takes 1s to return': function (err, config, response) {
+				assert.equal(config.host, '1.1.1.1');
 				
 				switch(os.platform()){
 				case 'linux':	
-					assert.equal(r.exitCode, 1);
+					assert.equal(response.exitCode, 1);
 					break;
 					
 				case 'darwin':
-					assert.equal(r.exitCode, 2);
+					assert.equal(response.exitCode, 2);
 					break;
 					
 				default:
-					assert.equal(r.exitCode, 1);
+					assert.equal(response.exitCode, 1);
 				}		
 				
 				assert.equal(end.getTime() - start.getTime() >= 1000, true);
 			},
-			'It failed': function (err, r) {
-				//console.log(util.inspect(r));
+			'It failed': function (err, config, response) {
+				//console.log(util.inspect(config, response));
 				assert.equal(err.code, 'ENORESPONSE');
-				assert.notEqual(r.exitCode, 0);
+				assert.notEqual(response.exitCode, 0);
 				
-			},'Date is set': function (err, r) {
-				assert.isNotNull(r.date);
-			},'ttl is undefined': function (err, r) {
-				assert.isUndefined(r.ttl);
-			},'mstime is undefined': function (err, r) {
-				assert.isUndefined(r.mstime);
+			},'Date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
+			},'ttl is undefined': function (err, config, response) {
+				assert.isUndefined(response.ttl);
+			},'mstime is undefined': function (err, config, response) {
+				assert.isUndefined(response.mstime);
 			}
 		}
 });

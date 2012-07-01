@@ -18,30 +18,30 @@ exports.suite1 = vows.describe('tcp').addBatch({
 				tcp.run({
 						port: 80,
 						host: 'www.google.com'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else { 
-						promise.emit('success', r); 
+						promise.emit('success', config, response);
 					}
 				});
 				return promise;
 			},
-			'host is www.google.com': function (err, r) {
-				assert.equal(r.host, 'www.google.com');		
+			'host is www.google.com': function (err, config, response) {
+				assert.equal(config.host, 'www.google.com');		
 			},
-			'Default port is 80': function (err, r) {
-				assert.equal(r.port, 80);	
+			'Default port is 80': function (err, config, response) {
+				assert.equal(config.port, 80);	
 			},
 			
-			'Default timout is valid': function (err, r) {
-				assert.equal(r.timeout, 2);		
+			'Default timout is valid': function (err, config, response) {
+				assert.equal(config.timeout, 2);		
 			},
-			'It succeed': function (err, r) {
-				assert.isNotNull(r);
+			'It succeed': function (err, config, response) {
+				assert.isNotNull(response);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response) {
+				assert.isNotNull(response.date);
 			}
 		},
 		'When checking an invalid hostname': {
@@ -51,23 +51,23 @@ exports.suite1 = vows.describe('tcp').addBatch({
 				tcp.run({
 						port: 80,
 						host: '---&'
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else {
-						promise.emit('success', r); 
+						promise.emit('success', config, response);
 					}
 				});
 				return promise;
 			},
-			'response is valid': function (err, r) {
-				assert.equal(r.host, '---&');
+			'response is valid': function (err, config, response) {
+				assert.equal(config.host, '---&');
 			},
-			'It failed': function (err, r) {
+			'It failed': function (err, config, response) {
 				assert.equal(err.code, 'ENOTFOUND');
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'response is indefined': function (err, config, response) {
+				assert.isUndefined(response);
 			}
 		},
 		'When checking google on evil port with a 500ms timeout': {
@@ -78,22 +78,22 @@ exports.suite1 = vows.describe('tcp').addBatch({
 						host: 'www.google.com', 
 						port: 666,
 						timeout: 1
-				}, function (err, r) {
+				}, function (err, config, response) {
 					if (err) { 
-						promise.emit('error', err, r); 
+						promise.emit('error', err, config, response); 
 					} else {
-						promise.emit('success', r); 
+						promise.emit('success', config, response);
 					}
 				});
 				return promise;
 			},
-			'It failed in 500ms': function (err,r) {
+			'It failed in 500ms': function (err, config, response) {
 				assert.equal(err.code, 'ETIMEOUT');
-				assert.equal(r.port, 666);
-				assert.equal(r.timeout, 1);
+				assert.equal(config.port, 666);
+				assert.equal(config.timeout, 1);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'response is indefined': function (err, config, response) {
+				assert.isUndefined(response);
 			}
 		}	
 });

@@ -17,7 +17,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				promise = new events.EventEmitter(),
 				invalidPingTask = nettasq.create();
 				
-				invalidPingTask.on('result', function (err, r, task) {
+				invalidPingTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -39,11 +39,11 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			topic: function() {
 				var
 				promise = new events.EventEmitter(),
-				invalidPingTask = nettasq.create({
+				invalidPingTask = nettasq.create({            
 						action: 'ping'
 				});
 				
-				invalidPingTask.on('result', function (err, r, task) {
+				invalidPingTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -70,7 +70,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						config: {}
 				});
 				
-				invalidPingTask.on('result', function (err, r, task) {
+				invalidPingTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -99,35 +99,35 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						}
 				});
 				
-				pingTask.on('result', function (err, r, task) {
+				pingTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('error', err); 
 						} else { 
-							promise.emit('success', r); 
+							promise.emit('success', config, response, task); 
 						}
 				});
 				pingTask.run();
 				return promise;
 			},
-			'It succeed': function (err, r) {
-				assert.isNotNull(r);
-				assert.strictEqual(r.exitCode, 0);
+			'It succeed': function (err, config, response, task) {
+				assert.isNotNull(response);
+				assert.strictEqual(response.exitCode, 0);
 			},
-			'host is set to localhost': function (err, r) {
-				assert.strictEqual(r.host, 'localhost');
+			'host is set to localhost': function (err, config, response, task) {
+				assert.strictEqual(config.host, 'localhost');
 			},
-			'default timeout equals 2': function (err, r) {
-				assert.strictEqual(r.timeout, 2);
+			'default timeout equals 2': function (err, config, response, task) {
+				assert.strictEqual(config.timeout, 2);
 			},
 			
-			'ipv6 is disabled by default': function (err, r) {
-				assert.isFalse(r.ipV6);
+			'ipv6 is disabled by default': function (err, config, response, task) {
+				assert.isFalse(config.ipV6);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response, task) {
+				assert.isNotNull(response.date);
 			},
-			'data is a string': function (err, r) {
-				assert.isString(r.data);
+			'data is a string': function (err, config, response, task) {
+				assert.isString(response.data);
 			}
 		},
 		'When a valid ping action task on localhost is finished': {
@@ -148,7 +148,8 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				return promise;
 			},
 			'"done" event is called': function (err, task) {
-				assert.strictEqual(task.config.exitCode, 0);
+				assert.isNull(err);
+				assert.isNotNull(task);
 			}
 		},/********************************************************************/
 		'When create a http task with no config': {
@@ -159,7 +160,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: 'http'
 				});
 				
-				invalidTask.on('result', function (err, r, task) {
+				invalidTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -186,7 +187,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						config: {}
 				});
 				
-				invalidTask.on('result', function (err, r, task) {
+				invalidTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -215,33 +216,34 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						}
 				});
 				
-				task.on('result', function (err, r, task) {
+				task.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('error', err); 
 						} else { 
-							promise.emit('success', r); 
+							promise.emit('success', config, response, task); 
 						}
 				});
 				task.run();
 				return promise;
 			},
-			'It succeed': function (err, r) {
+			'It succeed': function (err, config, response, task) {
 				assert.isNull(err);
-				assert.isNotNull(r);
-				
-				assert.strictEqual(r.statusCode, 302);
+				assert.isNotNull(config);
+				assert.isNotNull(response);	
+				assert.isNotNull(task);
+				assert.strictEqual(response.statusCode, 302);
 			},
-			'host is valid': function (err, r) {
-				assert.strictEqual(r.host, 'www.google.com');
+			'host is valid': function (err, config, response, task) {
+				assert.strictEqual(config.host, 'www.google.com');
 			},
-			'default timeout is valid': function (err, r) {
-				assert.strictEqual(r.timeout, 2);
+			'default timeout is valid': function (err, config, response, task) {
+				assert.strictEqual(config.timeout, 2);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response, task) {
+				assert.isNotNull(response.date);
 			},
-			'statusMessage is valid': function (err, r) {
-				assert.isString(r.statusMessage);
+			'statusMessage is valid': function (err, config, response, task) {
+				assert.isString(response.statusMessage);
 			}
 		},
 		'When a valid http action task on www.google.com is finished': {
@@ -262,7 +264,8 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				return promise;
 			},
 			'"done" event is called': function (err, task) {
-				assert.strictEqual(task.config.statusCode, 302);
+				assert.isNull(err);
+				assert.isNotNull(task);
 			}
 		},/********************************************************************/
 		'When create a tcp task with no config': {
@@ -273,7 +276,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: 'tcp'
 				});
 				
-				invalidTask.on('result', function (err, r, task) {
+				invalidTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -300,7 +303,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						config: {}
 				});
 				
-				invalidTask.on('result', function (err, r, task) {
+				invalidTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -330,28 +333,30 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						}
 				});
 				
-				task.on('result', function (err, r, task) {
+				task.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('error', err); 
 						} else { 
-							promise.emit('success', r); 
+							promise.emit('success', config, response, task); 
 						}
 				});
 				task.run();
 				return promise;
 			},
-			'It succeed': function (err, r) {
+			'It succeed': function (err, config, response, task) {
 				assert.isNull(err);
-				assert.isNotNull(r);
+				assert.isNotNull(config);
+				assert.isNotNull(response);
+				assert.isNotNull(task);
 			},
-			'host is valid': function (err, r) {
-				assert.strictEqual(r.host, 'www.google.com');
+			'host is valid': function (err, config, response, task) {
+				assert.strictEqual(config.host, 'www.google.com');
 			},
-			'default timeout is valid': function (err, r) {
-				assert.strictEqual(r.timeout, 2);
+			'default timeout is valid': function (err, config, response, task) {
+				assert.strictEqual(config.timeout, 2);
 			},
-			'date is set': function (err, r) {
-				assert.isNotNull(r.date);
+			'date is set': function (err, config, response, task) {
+				assert.isNotNull(response.date);
 			}
 		},
 		'When a valid tcp action task on www.google.com is finished': {
@@ -384,7 +389,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: '#@ù$^%'
 				});
 				
-				invalidTask.on('result', function (err, r, task) {
+				invalidTask.on('result', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
