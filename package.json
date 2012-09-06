@@ -8,7 +8,7 @@
 		"url": "git://github.com/sdolard/node-netmon.git"
 	},
 	"scripts": {
-		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -R lib/ test/",
+		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -r cli-hide-valid -R lib/ test/",
 		"test": "vows test/vows* --spec"
 	},
 	"engines": {
@@ -20,7 +20,6 @@
 		"posix-getopt": "0.0.x",
 		"colors": "0.6.x",
 		"socket.io": "0.9.x",
-		"netasqcomm": "0.1.x",
 		"jsonlint": "1.x.x",
 		"jsrevival": "0.0.x",
 		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git"
