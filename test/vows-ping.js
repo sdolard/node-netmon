@@ -18,7 +18,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.run({
+				ping.run('', {
 						host: 'localhost'
 				}, function (err, config, response) {
 					if (err) { 
@@ -44,7 +44,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.run({
+				ping.run('', {
 						host: 'nohost'
 				}, function (err, config, response) {
 					if (err) { 
@@ -72,7 +72,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				ping.run({
+				ping.run('', {
 						host: '::1',
 						ipV6: true
 				}, function (err, config, response) {
@@ -101,7 +101,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 				promise = new events.EventEmitter();
 				start = new Date();
 				
-				ping.run({
+				ping.run('', {
 						host: '1.1.1.1',
 						timeout: 1
 				}, function (err, config, response) {

@@ -15,7 +15,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				tcp.run({
+				tcp.run('', {
 						port: 80,
 						host: 'www.google.com'
 				}, function (err, config, response) {
@@ -48,7 +48,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				tcp.run({
+				tcp.run('', {
 						port: 80,
 						host: '---&'
 				}, function (err, config, response) {
@@ -74,7 +74,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				tcp.run({
+				tcp.run('', {
 						host: 'www.google.com', 
 						port: 666,
 						timeout: 1

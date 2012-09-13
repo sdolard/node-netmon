@@ -16,7 +16,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.run({
+				http.run('', {
 						host: 'www.google.com'
 				}, function (err, config, response) {
 					if (err) { 
@@ -57,7 +57,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.run({
+				http.run('', {
 						host: '---'
 				}, function (err, config, response) {
 					if (err) { 
@@ -82,7 +82,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.run({
+				http.run('', {
 						host: 'www.google.com', 
 						path: '/thispathdonotexists'
 				}, function (err, config, response) {
@@ -106,7 +106,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.run({
+				http.run('', {
 						host: 'www.google.com', 
 						port: 666,
 						timeout: 1
@@ -132,7 +132,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			topic: function() {
 				var promise = new events.EventEmitter();
 				
-				http.run({
+				http.run('', {
 						host: 'mail.google.com', 
 						ssl: true
 				}, function (err, config, response) {
