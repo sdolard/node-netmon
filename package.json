@@ -21,7 +21,7 @@
 		"colors": "0.6.x",
 		"socket.io": "0.9.x",
 		"jsonlint": "1.x.x",
-		"jsrevival": "0.0.x",
+		"jsrevival": "0.1.x",
 		"ansi": "0.1.x",
 		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git",
 		"netmon-ui": "git+ssh://git@github.com:sdolard/node-netmon-ui.git"
