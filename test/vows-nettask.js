@@ -8,7 +8,8 @@ vows = require('vows'),
 assert = require('assert'),
 util = require('util'),
 events = require("events"),
-nettasq = require('../lib/nettask');
+nettasq = require('../lib/nettask'),
+TASK_RESULT_RECEIVED = false;
 
 exports.suite1 = vows.describe('nettask').addBatch({
 		'When create a empty task': {
@@ -17,7 +18,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				promise = new events.EventEmitter(),
 				invalidPingTask = nettasq.create();
 				
-				invalidPingTask.on('result', function (err, config, response, task) {
+				invalidPingTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -43,7 +44,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: 'ping'
 				});
 				
-				invalidPingTask.on('result', function (err, config, response, task) {
+				invalidPingTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -70,7 +71,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						config: {}
 				});
 				
-				invalidPingTask.on('result', function (err, config, response, task) {
+				invalidPingTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -99,7 +100,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						}
 				});
 				
-				pingTask.on('result', function (err, config, response, task) {
+				pingTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('error', err); 
 						} else { 
@@ -160,7 +161,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: 'http'
 				});
 				
-				invalidTask.on('result', function (err, config, response, task) {
+				invalidTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -187,7 +188,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						config: {}
 				});
 				
-				invalidTask.on('result', function (err, config, response, task) {
+				invalidTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -216,7 +217,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						}
 				});
 				
-				task.on('result', function (err, config, response, task) {
+				task.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('error', err); 
 						} else { 
@@ -276,7 +277,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: 'tcp'
 				});
 				
-				invalidTask.on('result', function (err, config, response, task) {
+				invalidTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -303,7 +304,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						config: {}
 				});
 				
-				invalidTask.on('result', function (err, config, response, task) {
+				invalidTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -333,7 +334,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						}
 				});
 				
-				task.on('result', function (err, config, response, task) {
+				task.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('error', err); 
 						} else { 
@@ -380,7 +381,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			'"done" event is called': function (err, task) {
 				assert.strictEqual(task.config.port, 80);
 			}
-		},/********************************************************************/
+		},
 		'When create a task with an invalid action': {
 			topic: function() {
 				var
@@ -389,7 +390,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 						action: '#@ù$^%'
 				});
 				
-				invalidTask.on('result', function (err, config, response, task) {
+				invalidTask.on('taskresult', function (err, config, response, task) {
 						if (err) { 
 							promise.emit('success', err); 
 						}
@@ -405,6 +406,37 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			},
 			'Error message is valid': function (err) {
 				assert.strictEqual(err.message, 'Cannot find module \'./plugin/#@ù$^%\'');
+			}
+		},
+		'When create a valid tcp action task on www.google.com (taskstart)': {
+			topic: function() {
+				var
+				promise = new events.EventEmitter(),
+				task = nettasq.create({
+						action: 'tcp',
+						config: {
+							host: 'www.google.com',
+							port: 80
+						}
+				});
+				task.on('taskresult', function (err, config, response, task) {
+						TASK_RESULT_RECEIVED = true;
+				});
+				task.on('taskstart', function (config, task) {
+						promise.emit('success', config, task); 
+				});
+				task.run();
+				return promise;
+			},
+			'taskstart event is emitted with config param': function (config, task) {
+				assert.isNotNull(config);
+			},
+			'taskstart event is emitted with task param': function (config, task) {
+				assert.isNotNull(task);
+			}
+			,
+			'taskstart event is emitted before taskresult event': function (config, task) {
+				assert.isFalse(TASK_RESULT_RECEIVED);
 			}
 		}
 });

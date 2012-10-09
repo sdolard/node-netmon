@@ -1,7 +1,8 @@
 {
     "crontab": [
         {
-            "cronTime": "* * * * *",
+            "cronTime": "* * * * * *",
+            "verbose": true,
             "description": "Each second: just run one task in verbose mode",
             "enabled": true,
             "task": [

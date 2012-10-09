@@ -16,13 +16,15 @@
 	},
 	"dependencies": {
 		"vows": "0.6.x",
-		"cron": "0.2.x",
+		"cron": "1.0.x",
 		"posix-getopt": "0.0.x",
 		"colors": "0.6.x",
 		"socket.io": "0.9.x",
 		"jsonlint": "1.x.x",
 		"jsrevival": "0.0.x",
-		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git"
+		"ansi": "0.1.x",
+		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git",
+		"netmon-ui": "git+ssh://git@github.com:sdolard/node-netmon-ui.git"
 	},
 	"optionalDependencies": {}
 }
