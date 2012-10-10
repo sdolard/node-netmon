@@ -10,6 +10,7 @@ util = require('util'),
 os = require('os'),
 events = require("events"),
 ping = require('../lib/plugin/ping'),
+emptyFn = function() {},
 start,
 end;
 
@@ -26,7 +27,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 					} else { 
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It succeed': function (err, config, response) {
@@ -52,7 +53,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 					} else { 
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It failed': function (err, config, response) {
@@ -81,7 +82,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 					} else { 
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It succeed': function (err, config, response) {
@@ -112,7 +113,7 @@ exports.suite1 = vows.describe('ping').addBatch({
 						promise.emit('success', config, response); 
 					}
 					
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It takes 1s to return': function (err, config, response) {

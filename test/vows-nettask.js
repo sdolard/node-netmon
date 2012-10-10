@@ -9,7 +9,8 @@ assert = require('assert'),
 util = require('util'),
 events = require("events"),
 nettasq = require('../lib/nettask'),
-TASK_RESULT_RECEIVED = false;
+TASK_RESULT_RECEIVED = false,
+TASK_START_RECEIVED = false;
 
 exports.suite1 = vows.describe('nettask').addBatch({
 		'When create a empty task': {
@@ -111,7 +112,6 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				return promise;
 			},
 			'It succeed': function (err, config, response, task) {
-				assert.isNotNull(response);
 				assert.strictEqual(response.exitCode, 0);
 			},
 			'host is set to localhost': function (err, config, response, task) {
@@ -125,7 +125,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				assert.isFalse(config.ipV6);
 			},
 			'date is set': function (err, config, response, task) {
-				assert.isNotNull(response.date);
+				assert.isTrue(response.date !== undefined);
 			},
 			'data is a string': function (err, config, response, task) {
 				assert.isString(response.data);
@@ -150,7 +150,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			},
 			'"done" event is called': function (err, task) {
 				assert.isNull(err);
-				assert.isNotNull(task);
+				assert.equal(task.state, 'done');
 			}
 		},/********************************************************************/
 		'When create a http task with no config': {
@@ -229,9 +229,9 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			},
 			'It succeed': function (err, config, response, task) {
 				assert.isNull(err);
-				assert.isNotNull(config);
-				assert.isNotNull(response);	
-				assert.isNotNull(task);
+				assert.equal(config.host, 'www.google.com');
+				assert.isString(response.statusMessage);	
+				assert.equal(task.state, 'result');
 				assert.strictEqual(response.statusCode, 302);
 			},
 			'host is valid': function (err, config, response, task) {
@@ -241,7 +241,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				assert.strictEqual(config.timeout, 2);
 			},
 			'date is set': function (err, config, response, task) {
-				assert.isNotNull(response.date);
+				assert.isTrue(response.date !== undefined);
 			},
 			'statusMessage is valid': function (err, config, response, task) {
 				assert.isString(response.statusMessage);
@@ -266,7 +266,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			},
 			'"done" event is called': function (err, task) {
 				assert.isNull(err);
-				assert.isNotNull(task);
+				assert.equal(task.state, 'done');
 			}
 		},/********************************************************************/
 		'When create a tcp task with no config': {
@@ -345,10 +345,8 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				return promise;
 			},
 			'It succeed': function (err, config, response, task) {
-				assert.isNull(err);
-				assert.isNotNull(config);
-				assert.isNotNull(response);
-				assert.isNotNull(task);
+				assert.isNull(err);			
+				assert.equal(task.state, 'result');
 			},
 			'host is valid': function (err, config, response, task) {
 				assert.strictEqual(config.host, 'www.google.com');
@@ -357,7 +355,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				assert.strictEqual(config.timeout, 2);
 			},
 			'date is set': function (err, config, response, task) {
-				assert.isNotNull(response.date);
+				assert.isTrue(response.date !== undefined);
 			}
 		},
 		'When a valid tcp action task on www.google.com is finished': {
@@ -410,6 +408,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 		},
 		'When create a valid tcp action task on www.google.com (taskstart)': {
 			topic: function() {
+				TASK_RESULT_RECEIVED = false;
 				var
 				promise = new events.EventEmitter(),
 				task = nettasq.create({
@@ -429,14 +428,59 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				return promise;
 			},
 			'taskstart event is emitted with config param': function (config, task) {
-				assert.isNotNull(config);
+				assert.equal(config.host, 'www.google.com');
 			},
 			'taskstart event is emitted with task param': function (config, task) {
-				assert.isNotNull(task);
-			}
-			,
+				assert.equal(task.state, 'progress');
+			},
 			'taskstart event is emitted before taskresult event': function (config, task) {
 				assert.isFalse(TASK_RESULT_RECEIVED);
 			}
+			
 		}
+}).
+addBatch({'When create a valid tcp action task on www.google.com (taskprogress)': {
+		topic: function() {
+			TASK_START_RECEIVED = false;
+			TASK_RESULT_RECEIVED = false;
+			var
+			promise = new events.EventEmitter(),
+			task = nettasq.create({
+					action: 'tcp',
+					config: {
+						host: 'www.google.com',
+						port: 80
+					}
+			});
+			task.on('taskstart', function () {
+					TASK_START_RECEIVED = true;
+			});
+			task.on('taskresult', function () {
+					TASK_RESULT_RECEIVED = true;
+			});
+			task.on('taskprogress', function (config, task, msg) {
+					promise.emit('success', config, task, msg); 
+			});
+			task.run();
+			return promise;
+		},
+		'taskprogress event is emitted with config param': function (config, task, msg) {
+			assert.equal(config.host, 'www.google.com');
+		},
+		'taskprogress event is emitted with task param': function (config, task, msg) {
+			assert.equal(task.state, 'progress');
+		},
+		'taskprogress event is emitted with msg param': function (config, task, msg) {
+			assert.isObject(msg);
+		},
+		'msg param has got a date property': function (config, task, msg) {
+			assert.isTrue(msg.date !== undefined);
+		},
+		'taskprogress event is emitted before taskresult event': function () {
+			assert.isFalse(TASK_RESULT_RECEIVED);
+		},
+		'taskprogress event is emitted after taskstart event': function () {
+			assert.isTrue(TASK_START_RECEIVED);
+		}
+	}
 });

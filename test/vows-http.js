@@ -9,7 +9,8 @@ assert = require('assert'),
 util = require('util'),
 events = require("events"),
 nhttp = require('http'),
-http = require('../lib/plugin/http');
+http = require('../lib/plugin/http'),
+emptyFn = function() {};
 
 exports.suite1 = vows.describe('http/s').addBatch({
 		'When checking www.google.com': {
@@ -24,7 +25,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 					} else { 
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'host is www.google.com': function (err, config, response) {
@@ -65,7 +66,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 					} else {
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'response is valid': function (err, config, response) {
@@ -91,7 +92,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 					} else {
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'Path do not exists': function (err, config, response) {
@@ -116,7 +117,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 					} else {
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It failed in 500ms': function (err, config, response) {
@@ -141,7 +142,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 					} else {
 						promise.emit('success', config, response); 
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It succeed': function (err,config, response) {

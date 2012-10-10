@@ -8,7 +8,8 @@ vows = require('vows'),
 assert = require('assert'),
 util = require('util'),
 events = require("events"),
-tcp = require('../lib/plugin/tcp');
+tcp = require('../lib/plugin/tcp'), 
+emptyFn = function() {};
 
 exports.suite1 = vows.describe('tcp').addBatch({
 		'When checking www.google.com': {
@@ -24,7 +25,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 					} else { 
 						promise.emit('success', config, response);
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'host is www.google.com': function (err, config, response) {
@@ -57,7 +58,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 					} else {
 						promise.emit('success', config, response);
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'response is valid': function (err, config, response) {
@@ -84,7 +85,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 					} else {
 						promise.emit('success', config, response);
 					}
-				});
+				}, emptyFn);
 				return promise;
 			},
 			'It failed in 500ms': function (err, config, response) {
