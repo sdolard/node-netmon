@@ -10,7 +10,8 @@ util = require('util'),
 events = require("events"),
 nettasq = require('../lib/nettask'),
 TASK_RESULT_RECEIVED = false,
-TASK_START_RECEIVED = false;
+TASK2_START_RECEIVED = false,
+TASK2_RESULT_RECEIVED = false;
 
 exports.suite1 = vows.describe('nettask').addBatch({
 		'When create a empty task': {
@@ -435,37 +436,39 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			},
 			'taskstart event is emitted before taskresult event': function (config, task) {
 				assert.isFalse(TASK_RESULT_RECEIVED);
-			}
-			
-		}
-}).
-addBatch({'When create a valid tcp action task on www.google.com (taskprogress)': {
+			}	
+		},
+		'When create a valid tcp action task on www.google.com (taskprogress)': {
 		topic: function() {
-			TASK_START_RECEIVED = false;
-			TASK_RESULT_RECEIVED = false;
+			TASK2_START_RECEIVED = false;
+			TASK2_RESULT_RECEIVED = false;
 			var
+			callCount = 0,
 			promise = new events.EventEmitter(),
 			task = nettasq.create({
 					action: 'tcp',
 					config: {
-						host: 'www.google.com',
+						host: 'www.google.fr',
 						port: 80
 					}
 			});
 			task.on('taskstart', function () {
-					TASK_START_RECEIVED = true;
+					TASK2_START_RECEIVED = true;
 			});
 			task.on('taskresult', function () {
-					TASK_RESULT_RECEIVED = true;
+					TASK2_RESULT_RECEIVED = true;
 			});
 			task.on('taskprogress', function (config, task, msg) {
-					promise.emit('success', config, task, msg); 
+					if (callCount === 0) {
+						promise.emit('success', config, task, msg);
+					}
+					callCount++;
 			});
 			task.run();
 			return promise;
 		},
-		'taskprogress event is emitted with config param': function (config, task, msg) {
-			assert.equal(config.host, 'www.google.com');
+		'taskprogress event is emitted with config param foo': function (config, task, msg) {
+			assert.equal(config.host, 'www.google.fr');
 		},
 		'taskprogress event is emitted with task param': function (config, task, msg) {
 			assert.equal(task.state, 'progress');
@@ -476,11 +479,11 @@ addBatch({'When create a valid tcp action task on www.google.com (taskprogress)'
 		'msg param has got a date property': function (config, task, msg) {
 			assert.isTrue(msg.date !== undefined);
 		},
-		'taskprogress event is emitted before taskresult event': function () {
-			assert.isFalse(TASK_RESULT_RECEIVED);
+		'taskprogress event is emitted before taskresult event': function (config, task, msg) {
+			assert.isFalse(TASK2_RESULT_RECEIVED);
 		},
-		'taskprogress event is emitted after taskstart event': function () {
-			assert.isTrue(TASK_START_RECEIVED);
+		'taskprogress event is emitted after taskstart event': function (config, task, msg) {
+			assert.isTrue(TASK2_START_RECEIVED);
 		}
 	}
 });
