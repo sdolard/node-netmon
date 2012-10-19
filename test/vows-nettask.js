@@ -214,7 +214,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				task = nettasq.create({
 						action: 'http',
 						config: {
-							host: 'www.google.com'
+							host: 'www.google.fr'
 						}
 				});
 				
@@ -230,13 +230,13 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			},
 			'It succeed': function (err, config, response, task) {
 				assert.isNull(err);
-				assert.equal(config.host, 'www.google.com');
+				assert.equal(config.host, 'www.google.fr');
 				assert.isString(response.statusMessage);	
 				assert.equal(task.state, 'result');
-				assert.strictEqual(response.statusCode, 302);
+				assert.strictEqual(response.statusCode, 200);
 			},
 			'host is valid': function (err, config, response, task) {
-				assert.strictEqual(config.host, 'www.google.com');
+				assert.strictEqual(config.host, 'www.google.fr');
 			},
 			'default timeout is valid': function (err, config, response, task) {
 				assert.strictEqual(config.timeout, 2);
@@ -269,7 +269,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				assert.isNull(err);
 				assert.equal(task.state, 'done');
 			}
-		},/********************************************************************/
+		},
 		'When create a tcp task with no config': {
 			topic: function() {
 				var

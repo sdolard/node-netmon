@@ -22,6 +22,7 @@
 		"socket.io": "0.9.x",
 		"jsonlint": "1.x.x",
 		"jsrevival": "0.1.x",
+		"underscore": "1.4.x",
 		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git",
 		"netmon-ui": "git+ssh://git@github.com:sdolard/node-netmon-ui.git"
 	},
