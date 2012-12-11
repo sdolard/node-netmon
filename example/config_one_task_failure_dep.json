@@ -1,48 +1,48 @@
 {
-    "crontab": [
-        {
-            "cronTime": "* * * * *",
-            "description": "Each second: run on task and one depending on failure and another one when it's finished, no matter the result",
-            "enabled": true,
-            "task": [
-                {
-                    "enabled": true,
-                    "description": "--- ping",
-                    "action": "ping", 
-                    "verbose": false,
-                    "config": {
-                    	"host": "---"
-                    },
-                    "on": {
-                    	"failure": {
-                    		"run": [
-                    			{
-                    				"enabled": true,
-                    				"description": "Google.fr ping",
-                    				"action": "ping", 
-                    				"verbose": false,
-                    				"config": {
-                    					"host": "www.google.fr"
-                    				}
-                    			}
-                    		]
-                    	},
-                    	"complete": {
-                    		"run": [
-                    			{
-                    				"enabled": true,
-                    				"description": "bing.com ping",
-                    				"action": "ping", 
-                    				"verbose": false,
-                    				"config": {
-                    					"host": "www.bing.com"
-                    				}
-                    			}
-                    		]
-                    	}
-                    }
-                }
-            ]
-        }
-    ]
+	"crontab": [
+		{
+			"cronTime": "* * * * * *",
+			"description": "Each second: run on task and one depending on failure and another one when it's finished, no matter the result",
+			"enabled": true,
+			"task": [
+				{
+					"enabled": true,
+					"description": "--- ping",
+					"action": "ping", 
+					"verbose": false,
+					"config": {
+						"host": "---"
+					},
+					"on": {
+						"failure": {
+							"run": [
+								{
+									"enabled": true,
+									"description": "Google.fr ping",
+									"action": "ping", 
+									"verbose": false,
+									"config": {
+										"host": "www.google.fr"
+									}
+								}
+							]
+						},
+						"complete": {
+							"run": [
+								{
+									"enabled": true,
+									"description": "bing.com ping",
+									"action": "ping", 
+									"verbose": false,
+									"config": {
+										"host": "www.bing.com"
+									}
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	]
 }

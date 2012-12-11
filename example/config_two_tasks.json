@@ -1,28 +1,28 @@
 {
-    "crontab": [
-        {
-            "cronTime": "* * * * *",
-            "description": "Each second: run two tasks in parallel (async node style)",
-            "enabled": true,
-            "task": [
-                {
-                    "enabled": true,
-                    "description": "Google.comm ping",
-                    "action": "ping", 
-                    "verbose": false,
-                    "config": {
-                    	"host": "www.google.com"
-                    }
-                },{
-                    "enabled": true,
-                    "description": "Google.fr ping",
-                    "action": "ping", 
-                    "verbose": false,
-                    "config": {
-                    	"host": "www.google.fr"
-                    }
-                }
-            ]
-        }
-    ]
+	"crontab": [
+		{
+			"cronTime": "* * * * * *",
+			"description": "Each second: run two tasks in parallel (async node style)",
+			"enabled": true,
+			"task": [
+				{
+					"enabled": true,
+					"description": "Google.comm ping",
+					"action": "ping", 
+					"verbose": false,
+					"config": {
+						"host": "www.google.com"
+					}
+				},{
+					"enabled": true,
+					"description": "Google.fr ping",
+					"action": "ping", 
+					"verbose": false,
+					"config": {
+						"host": "www.google.fr"
+					}
+				}
+			]
+		}
+	]
 }

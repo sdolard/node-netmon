@@ -1,20 +1,20 @@
 {
-    "crontab": [
-        {
-            "cronTime": "* * * * *",
-            "runOnce": true,
-            "description": "Next second: just run task once",
-            "enabled": true,
-            "task": [
-                {
-                    "enabled": true,
-                    "description": "Google.comm ping",
-                    "action": "ping", 
-                    "config": {
-                    	"host": "www.google.com"
-                    }
-                }
-            ]
-        }
-    ]
+	"crontab": [
+		{
+			"cronTime": "* * * * * *",
+			"runOnce": true,
+			"description": "Next second: just run task once",
+			"enabled": true,
+			"task": [
+				{
+					"enabled": true,
+					"description": "Google.comm ping",
+					"action": "ping", 
+					"config": {
+						"host": "www.google.com"
+					}
+				}
+			]
+		}
+	]
 }
