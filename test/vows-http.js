@@ -47,6 +47,9 @@ exports.suite1 = vows.describe('http/s').addBatch({
 			'statusMessage corresponds to statusCode': function (err, config, response) {
 				assert.isTrue(response.statusMessage === nhttp.STATUS_CODES[response.statusCode.toString()]);		
 			},
+			'statusMessage is not undefined': function (err, config, response) {
+				assert.isDefined(response.statusMessage);		
+			},
 			'It succeed': function (err, config, response) {
 				assert.isNotNull(response);
 			},
