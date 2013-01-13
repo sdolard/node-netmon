@@ -36,7 +36,7 @@ exports.suite1 = vows.describe('tcp').addBatch({
 			},
 			
 			'Default timout is valid': function (err, config, response) {
-				assert.equal(config.timeout, 2);		
+				assert.equal(config.timeout, 1);		
 			},
 			'It succeed': function (err, config, response) {
 				assert.isNotNull(response);

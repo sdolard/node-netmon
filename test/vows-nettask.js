@@ -118,8 +118,8 @@ exports.suite1 = vows.describe('nettask').addBatch({
 			'host is set to localhost': function (err, config, response, task) {
 				assert.strictEqual(config.host, 'localhost');
 			},
-			'default timeout equals 2': function (err, config, response, task) {
-				assert.strictEqual(config.timeout, 2);
+			'default timeout equals 1': function (err, config, response, task) {
+				assert.strictEqual(config.timeout, 1);
 			},
 			
 			'ipv6 is disabled by default': function (err, config, response, task) {
@@ -239,7 +239,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				assert.strictEqual(config.host, 'www.google.fr');
 			},
 			'default timeout is valid': function (err, config, response, task) {
-				assert.strictEqual(config.timeout, 2);
+				assert.strictEqual(config.timeout, 1);
 			},
 			'date is set': function (err, config, response, task) {
 				assert.isTrue(response.date !== undefined);
@@ -353,7 +353,7 @@ exports.suite1 = vows.describe('nettask').addBatch({
 				assert.strictEqual(config.host, 'www.google.com');
 			},
 			'default timeout is valid': function (err, config, response, task) {
-				assert.strictEqual(config.timeout, 2);
+				assert.strictEqual(config.timeout, 1);
 			},
 			'date is set': function (err, config, response, task) {
 				assert.isTrue(response.date !== undefined);

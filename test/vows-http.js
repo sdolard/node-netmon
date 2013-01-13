@@ -39,7 +39,7 @@ exports.suite1 = vows.describe('http/s').addBatch({
 				assert.equal(config.path, '/');		
 			},
 			'Default timout is valid': function (err, config, response) {
-				assert.equal(config.timeout, 2);		
+				assert.equal(config.timeout, 1);		
 			},
 			'There is a statusCode': function (err, config, response) {
 				assert.isTrue(response.statusCode > 0);		
