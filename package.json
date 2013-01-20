@@ -8,7 +8,7 @@
 		"url": "git://github.com/sdolard/node-netmon.git"
 	},
 	"scripts": {
-		"pretest": "jsrevival -o \"properties: false, maxlen: 0\" -r cli-hide-valid -R lib/ test/",
+		"pretest": "jsrevival -o \"properties: false, maxlen: 0, debug: false, bitwise: false, eqeq: false, newcap: false, undef: false, unparam: false, vars: false\" -r cli-hide-valid -R lib/ test/",
 		"test": "vows test/vows* --spec"
 	},
 	"engines": {
