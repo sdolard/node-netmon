@@ -23,7 +23,6 @@
 		"underscore": "1.4.x",
 		"ssh2": "0.1.x",
 		"crashreporter": "0.0.x",
-		"mkdirp": "0.3.x",
 		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git"
 	},
 	"devDependencies" : {
