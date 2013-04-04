@@ -8,11 +8,11 @@
 		"url": "git://github.com/sdolard/node-netmon.git"
 	},
 	"scripts": {
-		"pretest": "jsrevival -o \"properties: false, maxlen: 0, debug: false, bitwise: false, eqeq: false, newcap: false, undef: false, unparam: false, vars: false\" -r cli-hide-valid -R lib/ test/",
-		"test": "vows test/vows* --spec"
+		"pretest": "jsrevival -p \"describe, it\" -o \"properties: false, maxlen: 0, debug: false, bitwise: false, eqeq: false, newcap: false, undef: false, unparam: false, vars: false\" -r cli-hide-valid -R lib/ test/",
+		"test": "mocha"
 	},
 	"engines": {
-		"node": ">= 0.6.0"
+		"node": ">= 0.10.0"
 	},
 	"dependencies": {
 		"cron": "1.0.x",
@@ -23,13 +23,12 @@
 		"underscore": "1.4.x",
 		"ssh2": "0.1.x",
 		"crashreporter": "0.0.x",
-		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git"
+		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git",
+		"jsrevival": "0.1.x"
 	},
 	"devDependencies" : {
-		"vows": "0.6.x",
-		"jsrevival": "0.1.x",
 		"mocha": "x.x.x"
-  	}
+	}
 }
 
 
