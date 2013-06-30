@@ -21,7 +21,7 @@
 		"ansi": "0.1.x",
 		"socket.io": "0.9.x",
 		"underscore": "1.4.x",
-		"ssh2": "0.1.x",
+		"ssh2": "0.2.x",
 		"crashreporter": "0.0.x",
 		"netasqcomm": "git+ssh://git@github.com:sdolard/node-netasqcomm.git",
 		"jsrevival": "0.1.x"

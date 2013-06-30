@@ -6,10 +6,6 @@ Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
 var
 assert = require('assert'),
 nettasq = require('../lib/nettask');
-/*,
-TASK_RESULT_RECEIVED = false,
-TASK2_START_RECEIVED = false,
-TASK2_RESULT_RECEIVED = false*/
 
 describe('nettask', function(){
 	it ('should throw an Exception when creating an empty task', function(done){

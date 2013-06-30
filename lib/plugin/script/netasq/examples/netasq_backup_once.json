@@ -1,0 +1,24 @@
+{
+	"crontab": [
+		{
+			"cronTime": "* * * * * *",
+			"runOnce": true,
+			"description": "Backup once",
+			"enabled": true,
+			"task": [
+				{
+					"action": "script",
+					"enabled": true,
+					"description": "fw backup",
+					"config": {
+						"script": "netasq/backup",
+						"outdir": "netmonbackup",
+						"host": "<host>",
+						"login": "<login>",
+						"pwd": "<pwd>"
+					}
+				}
+			]
+		}
+	]
+}
