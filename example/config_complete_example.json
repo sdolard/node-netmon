@@ -8,7 +8,7 @@
 				{
 					"enabled": true,
 					"description": "Google.fr ping",
-					"action": "ping",	
+					"action": "ping",
 					"config": {
 						"host": "www.google.fr"
 					}
@@ -16,7 +16,7 @@
 				{
 					"enabled": true,
 					"description": "Google.de ping",
-					"action": "ping",	
+					"action": "ping",
 					"config": {
 						"host": "www.google.de"
 					}
@@ -47,7 +47,7 @@
 								{
 									"enabled": true,
 									"description": "Bing.com ping",
-									"action": "ping",	
+									"action": "ping",
 									"config": {
 										"host": "www.bing.com"
 									}
@@ -68,7 +68,7 @@
 							"enabled": true,
 							"description": "Google.fr ping",
 							"action": "ping",
-							"enabled": false,	
+							"enabled": false,
 							"config": {
 								"host": "www.google.fr"
 							}
@@ -76,7 +76,7 @@
 						{
 							"enabled": true,
 							"description": "Google.de ping",
-							"action": "ping",	
+							"action": "ping",
 							"config": {
 								"host": "www.google.de"
 							}
@@ -94,21 +94,21 @@
 								{
 									"enabled": true,
 									"description": "Bing.fr ping",
-									"action": "ping",	
+									"action": "ping",
 									"config": {
 										"host": "www.bing.fr"
 									}
 								},{
 									"enabled": true,
 									"description": "Bing.de ping",
-									"action": "ping",	
+									"action": "ping",
 									"config": {
 										"host": "www.bing.de"
 									}
 								}
 							]
 						}
-					} 
+					}
 				}
 			]
 		}
