@@ -1,5 +1,5 @@
 {
-	"crontab": [
+	"jobs": [
 		{
 			"cronTime": "* * * * * *",
 			"description": "Each second: just run one task in verbose mode",

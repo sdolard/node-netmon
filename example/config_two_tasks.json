@@ -1,5 +1,5 @@
 {
-	"crontab": [
+	"jobs": [
 		{
 			"cronTime": "* * * * * *",
 			"description": "Each second: run two tasks in parallel (async node style)",

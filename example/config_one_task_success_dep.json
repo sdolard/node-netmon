@@ -1,5 +1,5 @@
 {
-	"crontab": [
+	"jobs": [
 		{
 			"cronTime": "* * * * * *",
 			"description": "Each second: run on task and one depending on success and another one when it's finished, no matter the result",

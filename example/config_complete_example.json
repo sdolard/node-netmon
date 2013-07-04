@@ -1,5 +1,5 @@
 {
-	"crontab": [
+	"jobs": [
 		{
 			"cronTime": "* * * * * *",
 			"description": "Each second: one or many tasks without dependency between them",
