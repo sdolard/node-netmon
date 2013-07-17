@@ -5,7 +5,7 @@ Copyright © 2011-2012 by Sebastien Dolard (sdolard@gmail.com)
 var
 assert = require('assert'),
 tcp = require('../lib/plugin/tcp'),
-emptyFn = function() {};
+emptyFn = function() { return; };
 
 describe('tcp', function(){
 	it ('should connect to www.google.com on port 80', function(done){
@@ -14,6 +14,7 @@ describe('tcp', function(){
 				port: 80,
 				host: 'www.google.com'
 			}, function (err, config, response) {
+				assert.equal(err, undefined);
 				assert.equal(config.host, 'www.google.com');
 				assert.equal(config.port, 80);
 				assert.equal(config.timeout, 1);

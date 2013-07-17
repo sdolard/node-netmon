@@ -4,6 +4,7 @@
 			"cronTime": "* * * * * *",
 			"description": "Each second: run sequentially 2 tasks collections",
 			"enabled": true,
+			"runOnce": true,
 			"task": [
 				{
 					"set": [
@@ -57,7 +58,7 @@
 								}
 							]
 						}
-					} 
+					}
 				},
 				{
 					"set": [
@@ -89,7 +90,7 @@
 								}
 							]
 						}
-					} 
+					}
 				}
 			]
 		}

@@ -6,7 +6,7 @@ var
 assert = require('assert'),
 os = require('os'),
 ping = require('../lib/plugin/ping'),
-emptyFn = function() {};
+emptyFn = function() { return;};
 
 describe('ping', function(){
 
@@ -14,6 +14,7 @@ describe('ping', function(){
 		ping.run('', {
 			host: 'localhost'
 		}, function (err, config, response) {
+			assert.equal(err, undefined);
 			assert.equal(config.host, 'localhost');
 			assert.equal(response.exitCode, 0);
 			assert(response.date instanceof Date);
@@ -27,6 +28,7 @@ describe('ping', function(){
 		ping.run('', {
 			host: 'nohost'
 		}, function (err, config, response) {
+			/*jslint unparam: true */
 			assert.equal(err.code, 'EPINGFAILED');
 			assert.notEqual(response.exitCode, 0);
 			assert(response.date instanceof Date);
@@ -41,6 +43,7 @@ describe('ping', function(){
 			host: '::1',
 			ipV6: true
 		}, function (err, config, response) {
+			assert.equal(err, undefined);
 			assert.equal(config.host, '::1');
 			assert.equal(response.exitCode, 0);
 			assert(response.date instanceof Date);

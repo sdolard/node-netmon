@@ -6,7 +6,7 @@ var
 assert = require('assert'),
 nhttp = require('http'),
 http = require('../lib/plugin/http'),
-emptyFn = function() {};
+emptyFn = function() {return;};
 
 describe('http/s', function (){
 	it('should ping ww.google.com', function(done) {
@@ -14,6 +14,10 @@ describe('http/s', function (){
 			{
 				host: 'www.google.com'
 			}, function (err, config, response) {
+				/*jslint unparam: true*/
+				// err could exists. Depends on your contry
+				// if you ping www.google.com from France,
+				// you will be redirected to www.google.fr
 				assert.equal(config.host, 'www.google.com');
 				assert.equal(config.port, 80);
 				assert(!config.ssl);
@@ -83,6 +87,7 @@ describe('http/s', function (){
 				host: 'mail.google.com',
 				ssl: true
 			}, function (err, config, response) {
+				assert.equal(err, undefined);
 				assert.equal(config.port, 443);
 				assert(config.ssl);
 				assert(response !== null);

@@ -10,7 +10,7 @@ nettasq = require('../lib/nettask');
 describe('nettask', function(){
 	it ('should throw an Exception when creating an empty task', function(done){
 		try {
-			var task = nettasq.create();
+			nettasq.create();
 		} catch(err) {
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'EINVALIDACTION');
@@ -24,6 +24,7 @@ describe('nettask', function(){
 			action: 'ping'
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'ENOHOST');
 			assert.strictEqual(err.message, 'No host defined');
@@ -38,6 +39,7 @@ describe('nettask', function(){
 			config: {}
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'ENOHOST');
 			assert.strictEqual(err.message, 'No host defined');
@@ -54,6 +56,7 @@ describe('nettask', function(){
 			}
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert.strictEqual(response.exitCode, 0);
 			assert.strictEqual(config.host, 'localhost');
 			assert.strictEqual(config.timeout, 1);
@@ -84,6 +87,7 @@ describe('nettask', function(){
 			action: 'http'
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'ENOHOST');
 			assert.strictEqual(err.message, 'No host defined');
@@ -98,6 +102,7 @@ describe('nettask', function(){
 			config: {}
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'ENOHOST');
 			assert.strictEqual(err.message, 'No host defined');
@@ -146,6 +151,7 @@ describe('nettask', function(){
 			action: 'tcp'
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'ENOHOST');
 			assert.strictEqual(err.message, 'No host defined');
@@ -160,6 +166,7 @@ describe('nettask', function(){
 			config: {}
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			assert(err instanceof Error);
 			assert.strictEqual(err.code, 'ENOHOST');
 			assert.strictEqual(err.message, 'No host defined');
@@ -226,6 +233,7 @@ describe('nettask', function(){
 			}
 		});
 		task.on('taskresult', function (err, config, response, task) {
+			/*jslint unparam: true */
 			resultReceived = true;
 		});
 		task.on('taskstart', function (config, task) {

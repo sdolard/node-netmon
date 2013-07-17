@@ -17,6 +17,7 @@
 	"dependencies": {
 		"cron": "1.0.x",
 		"posix-getopt": "0.0.x",
+		"commander": "1.3.x",
 		"colors": "0.6.x",
 		"ansi": "0.1.x",
 		"socket.io": "0.9.x",
@@ -30,5 +31,3 @@
 		"mocha": "x.x.x"
 	}
 }
-
-
